@@ -6,7 +6,7 @@ plugins {
 group = "info.novatec"
 
 micronaut {
-    runtime("netty")
+    runtime("undertow")
     testRuntime("junit5")
     processing {
         incremental(true)
@@ -26,6 +26,15 @@ dependencies {
     // Note: Newer versions of camunda-bpm-assert are not available on Maven Central
     testImplementation("org.camunda.bpm.assert:camunda-bpm-assert:8.0.0")
     testImplementation("org.assertj:assertj-core:3.18.1")
+
+    compileOnly("io.micronaut.servlet:micronaut-http-server-undertow:2.1.1")
+    // Undertow Dependencies
+    implementation("io.undertow:undertow-core:2.2.3.Final")
+    implementation("io.undertow:undertow-servlet:2.2.3.Final")
+    // JERSEY -> This dependencies can be removed later because I already have them in the Feature
+    implementation("org.glassfish.jersey.inject:jersey-hk2:2.32")
+    implementation("org.glassfish.jersey.containers:jersey-container-servlet-core:2.32")
+    implementation("org.glassfish.jersey.containers:jersey-container-servlet:2.32")
 }
 
 application {
