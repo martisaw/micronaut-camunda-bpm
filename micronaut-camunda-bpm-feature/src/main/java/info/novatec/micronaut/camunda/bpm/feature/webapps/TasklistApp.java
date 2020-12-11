@@ -1,4 +1,4 @@
-package info.novatec.micronaut.camunda.bpm.example.webapps;
+package info.novatec.micronaut.camunda.bpm.feature.webapps;
 
 import org.camunda.bpm.tasklist.impl.web.TasklistApplication;
 import org.glassfish.jersey.server.ResourceConfig;

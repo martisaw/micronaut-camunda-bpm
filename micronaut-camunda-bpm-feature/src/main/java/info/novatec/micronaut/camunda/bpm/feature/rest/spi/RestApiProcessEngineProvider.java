@@ -1,4 +1,4 @@
-package info.novatec.micronaut.camunda.bpm.example.rest.spi;
+package info.novatec.micronaut.camunda.bpm.feature.rest.spi;
 
 import org.camunda.bpm.engine.ProcessEngine;
 import org.camunda.bpm.engine.ProcessEngines;

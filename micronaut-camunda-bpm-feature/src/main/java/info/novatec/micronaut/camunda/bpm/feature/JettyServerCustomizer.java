@@ -1,7 +1,7 @@
-package info.novatec.micronaut.camunda.bpm.example;
+package info.novatec.micronaut.camunda.bpm.feature;
 
-import info.novatec.micronaut.camunda.bpm.example.webapps.*;
-import info.novatec.micronaut.camunda.bpm.example.rest.RestApp;
+import info.novatec.micronaut.camunda.bpm.feature.webapps.*;
+import info.novatec.micronaut.camunda.bpm.feature.rest.RestApp;
 import io.micronaut.context.event.BeanCreatedEvent;
 import io.micronaut.context.event.BeanCreatedEventListener;
 import org.camunda.bpm.admin.impl.web.bootstrap.AdminContainerBootstrap;
