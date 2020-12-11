@@ -6,6 +6,7 @@ import io.micronaut.context.event.BeanCreatedEvent;
 import io.micronaut.context.event.BeanCreatedEventListener;
 import org.camunda.bpm.admin.impl.web.bootstrap.AdminContainerBootstrap;
 import org.camunda.bpm.cockpit.impl.web.bootstrap.CockpitContainerBootstrap;
+import org.camunda.bpm.engine.ProcessEngineConfiguration;
 import org.camunda.bpm.engine.rest.filter.CacheControlFilter;
 import org.camunda.bpm.engine.rest.filter.EmptyBodyFilter;
 import org.camunda.bpm.tasklist.impl.web.bootstrap.TasklistContainerBootstrap;
@@ -41,6 +42,10 @@ public class JettyServerCustomizer implements BeanCreatedEventListener<Server> {
 
     private static final Logger log = LoggerFactory.getLogger(JettyServerCustomizer.class);
 
+    public JettyServerCustomizer(ProcessEngineConfiguration processEngineConfiguration) {
+        // Injecting ProcessEngineConfiguration so that it will be initialized first.
+        // This makes sure that the Camunda Cockpit uses the Hikari Connection Pool -> Very strange
+    }
 
     @Override
     public Server onCreated(BeanCreatedEvent<Server> event) {
