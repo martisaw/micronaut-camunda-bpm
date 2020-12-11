@@ -11,25 +11,17 @@ import javax.inject.Inject;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @MicronautTest
-class CamundaControllerTest {
+public class RestTest {
 
     @Inject
-    @Client("/default")
+    @Client("/engine-rest")
     RxHttpClient client;
 
     @Test
-    void name() {
-        HttpRequest<String> request = HttpRequest.GET("/name");
+    void engine() {
+        HttpRequest<String> request = HttpRequest.GET("/engine");
         String body = client.toBlocking().retrieve(request);
 
-        assertEquals("default", body);
-    }
-
-    @Test
-    void definitions() {
-        HttpRequest<String> request = HttpRequest.GET("/definitions");
-        String body = client.toBlocking().retrieve(request);
-
-        assertEquals("HelloWorld", body);
+        assertEquals("[{\"name\":\"default\"}]", body);
     }
 }
