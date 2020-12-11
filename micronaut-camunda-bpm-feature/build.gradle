@@ -45,11 +45,10 @@ dependencies {
     implementation("org.glassfish.jersey.containers:jersey-container-servlet-core:$jerseyVersion")
     implementation("org.glassfish.jersey.containers:jersey-container-servlet:$jerseyVersion")
     // Micronaut Servlet Dependency for Jetty
-    implementation("io.micronaut.servlet:micronaut-http-server-jetty:$mnServletJettyVersion")
-
+    compileOnly("io.micronaut.servlet:micronaut-http-server-jetty:$mnServletJettyVersion")
     // Additional needed Jetty Dependencies
-    implementation("org.eclipse.jetty:jetty-server:$jettyVersion")
-    implementation("org.eclipse.jetty:jetty-servlet:$jettyVersion")
+    compileOnly("org.eclipse.jetty:jetty-server:$jettyVersion")
+    compileOnly("org.eclipse.jetty:jetty-servlet:$jettyVersion")
 }
 
 java {
