@@ -9,13 +9,8 @@ import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import javax.inject.Inject
 
-/**
- * Tests if the Webapps are accessible
- *
- * @author Martin Sawilla
- */
 @MicronautTest
-class WebappsTest2 {
+class WebappTest {
     @Inject
     @field:Client("/camunda")
     var client: RxHttpClient? = null

@@ -23,6 +23,6 @@ class RestTest {
         val body = client!!.toBlocking().retrieve(request)
 
         // CustomizedEngine because there is a Singleton replacing the DefaultEngine
-        Assertions.assertEquals("[{\"name\":\"CustomizedEngine\"}]", body)
+        Assertions.assertEquals("""[{"name":"CustomizedEngine"}]""", body)
     }
 }
