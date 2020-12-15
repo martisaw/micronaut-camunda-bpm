@@ -21,6 +21,7 @@ dependencies {
 
     // Test
     testImplementation("io.micronaut:micronaut-http-client")
+    implementation("org.glassfish.jersey.containers:jersey-container-netty-http:2.32")
 
     // See Compatibility Matrix at https://docs.camunda.org/manual/latest/user-guide/testing/#assertions-version-compatibility
     // Note: Newer versions of camunda-bpm-assert are not available on Maven Central
