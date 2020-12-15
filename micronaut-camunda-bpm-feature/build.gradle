@@ -34,10 +34,11 @@ dependencies {
 
     // Test
     testImplementation("org.mockito:mockito-core:3.6.28")
+    testImplementation("io.micronaut:micronaut-http-client")
     testRuntimeOnly("com.h2database:h2")
 
     // JETTY REST + WEBAPPS
-    implementation("com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:$jacksonVersion") // REST API Requirement
+    implementation("com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider") // REST API Requirement
     implementation("org.camunda.bpm:camunda-engine-rest:$camundaVersion") // REST API Requirement
     implementation("org.camunda.bpm.webapp:camunda-webapp-webjar:$camundaVersion") // WEBJAR
     // JERSEY
@@ -45,7 +46,7 @@ dependencies {
     implementation("org.glassfish.jersey.containers:jersey-container-servlet-core:$jerseyVersion")
     implementation("org.glassfish.jersey.containers:jersey-container-servlet:$jerseyVersion")
     // Micronaut Servlet Dependency for Jetty
-    compileOnly("io.micronaut.servlet:micronaut-http-server-jetty:$mnServletJettyVersion")
+    compileOnly("io.micronaut.servlet:micronaut-http-server-jetty")
     // Additional needed Jetty Dependencies
     compileOnly("org.eclipse.jetty:jetty-server:$jettyVersion")
     compileOnly("org.eclipse.jetty:jetty-servlet:$jettyVersion")
