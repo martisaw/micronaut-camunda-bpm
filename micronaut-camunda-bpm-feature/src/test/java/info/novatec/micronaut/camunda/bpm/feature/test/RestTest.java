@@ -1,4 +1,4 @@
-package info.novatec.micronaut.camunda.bpm.example;
+package info.novatec.micronaut.camunda.bpm.feature.test;
 
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.client.RxHttpClient;
@@ -22,6 +22,7 @@ public class RestTest {
         HttpRequest<String> request = HttpRequest.GET("/engine");
         String body = client.toBlocking().retrieve(request);
 
-        assertEquals("[{\"name\":\"default\"}]", body);
+        // CustomizedEngine because there is a Singleton replacing the DefaultEngine
+        assertEquals("[{\"name\":\"CustomizedEngine\"}]", body);
     }
 }
