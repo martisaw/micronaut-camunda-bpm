@@ -7,5 +7,6 @@ public class AdminApp extends ResourceConfig {
     static AdminApplication adminApplication = new AdminApplication();
     public AdminApp(){
         registerClasses(adminApplication.getClasses());
+        property("jersey.config.server.wadl.disableWadl", "true");
     }
 }

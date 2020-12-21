@@ -9,6 +9,7 @@ public class WelcomeApp extends ResourceConfig {
 
     public WelcomeApp() {
         registerClasses(welcomeApplication.getClasses());
+        property("jersey.config.server.wadl.disableWadl", "true");
     }
 
 }

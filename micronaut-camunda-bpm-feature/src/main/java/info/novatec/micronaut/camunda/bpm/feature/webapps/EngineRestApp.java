@@ -7,5 +7,6 @@ public class EngineRestApp extends ResourceConfig {
     static EngineRestApplication engineRestApplication = new EngineRestApplication();
     public EngineRestApp() {
         registerClasses(engineRestApplication.getClasses());
+        property("jersey.config.server.wadl.disableWadl", "true");
     }
 }

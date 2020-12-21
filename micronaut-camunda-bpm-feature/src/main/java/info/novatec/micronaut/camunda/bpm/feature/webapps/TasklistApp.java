@@ -7,5 +7,6 @@ public class TasklistApp extends ResourceConfig {
     static TasklistApplication tasklistApplication = new TasklistApplication();
     public TasklistApp() {
         registerClasses(tasklistApplication.getClasses());
+        property("jersey.config.server.wadl.disableWadl", "true");
     }
 }
