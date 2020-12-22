@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class CamundaControllerTest {
 
     @Inject
-    @Client("/default")
+    @Client("/example")
     RxHttpClient client;
 
     @Test
