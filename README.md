@@ -183,6 +183,14 @@ public String startHelloWorldProcess() {
     return runtimeService.startProcessInstanceByKey("HelloWorld").getId();
 }
 ```
+## REST API and Webapps
+Currently, we support the REST API and Webapps only for **Jetty**. They are automatically included as soon as you
+change the `micronaut.runtime` in the `build.gradle` of your project to `runtime('jetty')`.  
+
+Further Information:
+* The authorization for the REST API is not implemented.
+* To access the REST API use `/engine-rest/*`. To get e.g. the engine you can use `/engine-rest/engine`.
+* To access the Webapps use `/camunda/`. You get redirected to the webapps.
 
 ## Configuration
 
@@ -263,14 +271,6 @@ public class MyJobExecutorCustomizer implements JobExecutorCustomizer {
     }
 }
 ```
-### REST API and Webapps
-Currently, we support the REST API and Webapps only for **Jetty**. They are automatically included as soon as you 
-change the `micronaut.runtime` in `build.gradle` to `runtime('jetty')`.  
-The authorization for the REST API is not implemented.  
-
-To access the REST API use `/engine-rest/*`. To get e.g. the engine you can use `/engine-rest/engine`.
-
-To access the Webapps use `/camunda/`. You get redirected.
 
 ## Using micronaut-data-jdbc or micronaut-data-jpa
 
