@@ -1,8 +1,9 @@
-# Transactional test with data-jdbc
+# REST API and Webapps Test
 
-Additional tests using Micronaut-managed transaction manager and datasource with the following additional dependencies:
+Additional tests using Micronaut Servlet with Jetty
 
 ```
-testAnnotationProcessor("io.micronaut.data:micronaut-data-processor")
-testImplementation("io.micronaut.data:micronaut-data-jdbc")
+testImplementation("io.micronaut.servlet:micronaut-http-server-jetty")
+testImplementation("org.eclipse.jetty:jetty-server:$jettyVersion")
+testImplementation("org.eclipse.jetty:jetty-servlet:$jettyVersion")
 ```

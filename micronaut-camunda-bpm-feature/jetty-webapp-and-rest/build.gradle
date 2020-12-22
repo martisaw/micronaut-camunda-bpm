@@ -1,11 +1,12 @@
 plugins {
-    id("io.micronaut.library")
+    id("io.micronaut.application")
     id("org.jetbrains.kotlin.jvm")
     id("org.jetbrains.kotlin.kapt")
     id("org.jetbrains.kotlin.plugin.allopen")
 }
 
 micronaut {
+    runtime("jetty")
     testRuntime("junit5")
     processing {
         incremental(true)
@@ -15,16 +16,26 @@ micronaut {
 
 dependencies {
     testImplementation(project(":micronaut-camunda-bpm-feature"))
-    testImplementation(project(":micronaut-camunda-bpm-feature").sourceSets.test.output)
+    //testImplementation(project(":micronaut-camunda-bpm-feature").sourceSets.test.output)
     testRuntimeOnly("com.h2database:h2")
+    testRuntimeOnly("ch.qos.logback:logback-classic")
 
     kaptTest(platform("io.micronaut:micronaut-bom:$micronautVersion"))
     kaptTest("io.micronaut.data:micronaut-data-processor")
     kaptTest("io.micronaut:micronaut-inject-java:$micronautVersion")
 
+    testImplementation("io.micronaut.servlet:micronaut-http-server-jetty")
+    testImplementation("io.micronaut:micronaut-http-client")
+    testImplementation("org.eclipse.jetty:jetty-server:$jettyVersion")
+    testImplementation("org.eclipse.jetty:jetty-servlet:$jettyVersion")
+
     // Integration of Transaction Management
-    testAnnotationProcessor("io.micronaut.data:micronaut-data-processor")
-    testImplementation("io.micronaut.data:micronaut-data-jdbc")
+    //testAnnotationProcessor("io.micronaut.data:micronaut-data-processor")
+    //testImplementation("io.micronaut.data:micronaut-data-jdbc")
+}
+
+application {
+    mainClass.set("info.novatec.micronaut.camunda.bpm.feature.test.Application")
 }
 
 java {
