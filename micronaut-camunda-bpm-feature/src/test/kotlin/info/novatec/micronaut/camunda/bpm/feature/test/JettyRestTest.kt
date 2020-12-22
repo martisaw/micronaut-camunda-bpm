@@ -21,12 +21,12 @@ class JettyRestTest {
 
     @Inject
     @field:Client("/engine-rest")
-    var client: RxHttpClient? = null
+    lateinit var client: RxHttpClient
 
     @Test
     fun engine() {
         val request: HttpRequest<String> = HttpRequest.GET("/engine")
-        val body = client!!.toBlocking().retrieve(request)
+        val body = client.toBlocking().retrieve(request)
 
         // CustomizedEngine because there is a Singleton replacing the DefaultEngine
         Assertions.assertEquals("""[{"name":"CustomizedEngine"}]""", body)

@@ -1,7 +1,8 @@
 package info.novatec.micronaut.camunda.bpm.feature;
 
-import info.novatec.micronaut.camunda.bpm.feature.webapps.*;
 import info.novatec.micronaut.camunda.bpm.feature.rest.RestApp;
+import info.novatec.micronaut.camunda.bpm.feature.webapp.*;
+import io.micronaut.context.annotation.Requires;
 import io.micronaut.context.event.BeanCreatedEvent;
 import io.micronaut.context.event.BeanCreatedEventListener;
 import io.micronaut.transaction.SynchronousTransactionManager;
@@ -32,22 +33,30 @@ import javax.servlet.*;
 import java.sql.Connection;
 import java.util.EnumSet;
 
+import static javax.servlet.DispatcherType.*;
+import static javax.servlet.DispatcherType.REQUEST;
+
 /**
  * Using Micronaut Servlet with Jetty to run the REST API as a servlet.
  * https://micronaut-projects.github.io/micronaut-servlet/1.0.x/guide/#jetty
  *
  * @author Martin Sawilla
  */
+@Requires(property = "camunda.bpm")
 @Singleton
+//Implementation based on Spring-Boot-Starter: https://github.com/camunda/camunda-bpm-spring-boot-starter/tree/master/starter-webapp-core/src/main/java/org/camunda/bpm/spring/boot/starter/webapp
 public class JettyServerCustomizer implements BeanCreatedEventListener<Server> {
 
+    protected static final String CONTEXT_PATH_REST = "/engine-rest";
+    protected static final String CONTEXT_PATH_WEBAPPS = "/camunda";
     private static final Logger log = LoggerFactory.getLogger(JettyServerCustomizer.class);
 
-    public JettyServerCustomizer(SynchronousTransactionManager<Connection> transactionManager) {
+    protected final Configuration configuration;
+
+    public JettyServerCustomizer(SynchronousTransactionManager<Connection> transactionManager, Configuration configuration) {
         log.trace("Transaction Manager has been initialized: {}", transactionManager);
+        this.configuration = configuration;
     }
-
-
 
     @Override
     public Server onCreated(BeanCreatedEvent<Server> event) {
@@ -58,19 +67,18 @@ public class JettyServerCustomizer implements BeanCreatedEventListener<Server> {
 
         // REST-API
         ServletContextHandler restServletContextHandler = new ServletContextHandler();
-        restServletContextHandler.setContextPath("/engine-rest");
+        restServletContextHandler.setContextPath(CONTEXT_PATH_REST);
         ServletHolder servletHolder = new ServletHolder(new ServletContainer(new RestApp()));
         restServletContextHandler.addServlet(servletHolder, "/*");
 
-        log.info("REST API initialized, try to access e.g. {}:8080/engine-rest/engine", jettyServer.getURI().toString());
+        log.info("REST API initialized on {}/*", CONTEXT_PATH_REST);
 
         // WEBAPPS
         ServletContextHandler webappsContextHandler = new ServletContextHandler();
         Servlet defaultServlet = new DefaultServlet();
         ServletHolder webappsHolder = new ServletHolder("webapps", defaultServlet);
         webappsContextHandler.addServlet(webappsHolder, "/*");
-
-        webappsContextHandler.setContextPath("/camunda");
+        webappsContextHandler.setContextPath(CONTEXT_PATH_WEBAPPS);
 
         Resource webappsResource = Resource.newClassPathResource("/META-INF/resources/webjars/camunda");
         Resource pluginsResource = Resource.newClassPathResource("/META-INF/resources");
@@ -84,15 +92,11 @@ public class JettyServerCustomizer implements BeanCreatedEventListener<Server> {
         webappsContextHandler.addEventListener(new HttpSessionMutexListener());
         webappsContextHandler.addEventListener(new ServletContextInitializedListener());
 
-        log.info("Access the WEBAPPS here {}:8080/camunda/app/welcome", jettyServer.getURI().toString());
+        log.info("Webapps initialized on {}", CONTEXT_PATH_WEBAPPS);
 
-        //Registers SessionTrackingMode.COOKIE, SessionTrackingMode.URL <- I need Cookie
-        SessionHandler sessionHandler = new SessionHandler();
-        webappsContextHandler.setSessionHandler(sessionHandler);
+        webappsContextHandler.setSessionHandler(new SessionHandler());
 
-        // Multiple handlers for same path => Check which matches first
-        ContextHandlerCollection contexts = new ContextHandlerCollection(contextHandler, webappsContextHandler,restServletContextHandler);
-        jettyServer.setHandler(contexts);
+        jettyServer.setHandler(new ContextHandlerCollection(contextHandler, webappsContextHandler, restServletContextHandler));
 
         return jettyServer;
     }
@@ -100,21 +104,12 @@ public class JettyServerCustomizer implements BeanCreatedEventListener<Server> {
     /*  I need to configure the Camunda Webapps here because in the JettyServerCustomizer.onCreated() method
     I do not have access to e.g. Cockpit.getRuntimeDelegate() (results in null). But here the Cockpit.getRuntimeDelegate() does not return null.
      */
-    public static class ServletContextInitializedListener implements ServletContextListener {
+    static class ServletContextInitializedListener implements ServletContextListener {
         private static final Logger log = LoggerFactory.getLogger(ServletContextInitializedListener.class);
 
-        private static final EnumSet<DispatcherType> DISPATCHER_TYPES = EnumSet.of(DispatcherType.REQUEST, DispatcherType.INCLUDE, DispatcherType.FORWARD, DispatcherType.ERROR);
+        protected static EnumSet<DispatcherType> DISPATCHER_TYPES = EnumSet.of(REQUEST, INCLUDE, FORWARD, ERROR);
 
-        private static ServletContext servletContext;
-
-        private void registerFilter(final String filterName, final Class<? extends Filter> filterClass, final String... urlPatterns) {
-            FilterRegistration filterRegistration = servletContext.getFilterRegistration(filterName);
-            if (filterRegistration == null) {
-                filterRegistration = servletContext.addFilter(filterName, filterClass);
-                filterRegistration.addMappingForUrlPatterns(DISPATCHER_TYPES, true, urlPatterns);
-                log.info("Filter {} for URL {} registered", filterName, urlPatterns);
-            }
-        }
+        protected static ServletContext servletContext;
 
         @Override
         public void contextInitialized(ServletContextEvent sce) {
@@ -132,8 +127,13 @@ public class JettyServerCustomizer implements BeanCreatedEventListener<Server> {
             registerFilter("CacheControlFilter", CacheControlFilter.class, "/api/*", "/app/*");
         }
 
-        @Override
-        public void contextDestroyed(ServletContextEvent sce) {
+        protected void registerFilter(String filterName, Class<? extends Filter> filterClass, String... urlPatterns) {
+            FilterRegistration filterRegistration = servletContext.getFilterRegistration(filterName);
+            if (filterRegistration == null) {
+                filterRegistration = servletContext.addFilter(filterName, filterClass);
+                filterRegistration.addMappingForUrlPatterns(DISPATCHER_TYPES, true, urlPatterns);
+                log.info("Filter {} for URL {} registered", filterName, urlPatterns);
+            }
         }
     }
 }

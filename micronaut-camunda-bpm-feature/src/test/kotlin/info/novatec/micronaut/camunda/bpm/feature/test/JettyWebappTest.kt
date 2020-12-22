@@ -21,32 +21,33 @@ import javax.inject.Inject
 class JettyWebappTest {
     @Inject
     @field:Client("/camunda")
-    var client: RxHttpClient? = null
+    lateinit var client: RxHttpClient
+
     @Test
     fun welcome() {
         val request: HttpRequest<String> = HttpRequest.GET("/app/welcome/default")
-        val res: HttpResponse<*> = client!!.toBlocking().exchange<String, Any>(request)
+        val res: HttpResponse<*> = client.toBlocking().exchange<String, Any>(request)
         Assertions.assertEquals(200, res.status().code)
     }
 
     @Test
     fun admin() {
         val request: HttpRequest<String> = HttpRequest.GET("/app/admin/default")
-        val res: HttpResponse<*> = client!!.toBlocking().exchange<String, Any>(request)
+        val res: HttpResponse<*> = client.toBlocking().exchange<String, Any>(request)
         Assertions.assertEquals(200, res.status().code)
     }
 
     @Test
     fun cockpit() {
         val request: HttpRequest<String> = HttpRequest.GET("/app/cockpit/default")
-        val res: HttpResponse<*> = client!!.toBlocking().exchange<String, Any>(request)
+        val res: HttpResponse<*> = client.toBlocking().exchange<String, Any>(request)
         Assertions.assertEquals(200, res.status().code)
     }
 
     @Test
     fun tasklist() {
         val request: HttpRequest<String> = HttpRequest.GET("/app/tasklist/default")
-        val res: HttpResponse<*> = client!!.toBlocking().exchange<String, Any>(request)
+        val res: HttpResponse<*> = client.toBlocking().exchange<String, Any>(request)
         Assertions.assertEquals(200, res.status().code)
     }
 }

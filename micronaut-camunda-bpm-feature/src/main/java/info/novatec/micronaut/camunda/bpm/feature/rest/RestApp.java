@@ -14,6 +14,7 @@ public class RestApp extends ResourceConfig {
         // Register Camunda Rest Resources
         registerClasses(CamundaRestResources.getResourceClasses());
         registerClasses(CamundaRestResources.getConfigurationClasses());
+        // Disable WADL-Feature because we do not want to expose a XML description of our RESTful web application.
         property("jersey.config.server.wadl.disableWadl", "true");
     }
 }

@@ -63,4 +63,6 @@ public interface Configuration {
         @Bindable
         Optional<String> getEmail();
     }
+
+    //interface + getter -> Default false
 }
