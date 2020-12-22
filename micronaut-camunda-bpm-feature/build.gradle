@@ -35,7 +35,7 @@ dependencies {
     // Test
     testImplementation("org.mockito:mockito-core:3.6.28")
     testImplementation("io.micronaut:micronaut-http-client")
-    testImplementation("io.micronaut.servlet:micronaut-http-server-jetty") // To work with MnServlet Jetty
+    testRuntimeOnly("io.micronaut.servlet:micronaut-http-server-jetty")
     testRuntimeOnly("com.h2database:h2")
 
     // JETTY REST + WEBAPPS
