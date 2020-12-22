@@ -185,11 +185,11 @@ public String startHelloWorldProcess() {
 ```
 ## REST API and Webapps
 Currently, we support the REST API and Webapps only for **Jetty**. They are automatically included as soon as you
-change the `micronaut.runtime` in the `build.gradle` of your project to `runtime('jetty')`.  
+change the `micronaut.runtime` in the `build.gradle` of your project to `runtime("jetty")`.  
 
 Further Information:
 * The authorization for the REST API is not implemented.
-* To access the REST API use `/engine-rest/*`. To get e.g. the engine you can use `/engine-rest/engine`.
+* To access the REST API use `/engine-rest/*`. To e.g. get the engine you can use `/engine-rest/engine`.
 * To access the Webapps use `/camunda/`. You get redirected to the webapps.
 
 ## Configuration

@@ -43,16 +43,6 @@ public class JettyServerCustomizer implements BeanCreatedEventListener<Server> {
 
     private static final Logger log = LoggerFactory.getLogger(JettyServerCustomizer.class);
 
-    /**
-     Injecting the {@link SynchronousTransactionManager} here makes sure that the following scenario works:
-     Cockpit -> Process Definitions -> Any Definition, e.g. HelloWorld
-     Set a breakpoint in {@link JdbcTransaction#openConnection()} to see which data source is being used:
-     Works: {@link io.micronaut.configuration.jdbc.hikari.HikariUrlDataSource}
-     Doesn't work: {@link io.micronaut.transaction.jdbc.TransactionAwareDataSource}.
-     In case of TransactionAwareDataSource a {@link io.micronaut.transaction.jdbc.exceptions.CannotGetJdbcConnectionException}
-     will be thrown in {@link io.micronaut.transaction.jdbc.DataSourceUtils#doGetConnection(DataSource, boolean)} because
-     "allowCreate" is false.
-     */
     public JettyServerCustomizer(SynchronousTransactionManager<Connection> transactionManager) {
         log.trace("Transaction Manager has been initialized: {}", transactionManager);
     }
