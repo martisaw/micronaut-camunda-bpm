@@ -42,7 +42,7 @@ import static javax.servlet.DispatcherType.REQUEST;
  *
  * @author Martin Sawilla
  */
-@Requires(property = "camunda.bpm")
+//@Requires(property = "camunda.bpm")
 @Singleton
 //Implementation based on Spring-Boot-Starter: https://github.com/camunda/camunda-bpm-spring-boot-starter/tree/master/starter-webapp-core/src/main/java/org/camunda/bpm/spring/boot/starter/webapp
 public class JettyServerCustomizer implements BeanCreatedEventListener<Server> {
