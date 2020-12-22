@@ -18,7 +18,7 @@ import javax.inject.Inject
  */
 @Requires(beans = [Server::class])
 @MicronautTest
-class WebappTest {
+class JettyWebappTest {
     @Inject
     @field:Client("/camunda")
     var client: RxHttpClient? = null

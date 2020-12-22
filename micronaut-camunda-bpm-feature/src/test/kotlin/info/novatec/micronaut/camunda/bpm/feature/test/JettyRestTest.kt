@@ -17,7 +17,7 @@ import javax.inject.Inject
  */
 @Requires(beans = [Server::class])
 @MicronautTest
-class RestTest {
+class JettyRestTest {
 
     @Inject
     @field:Client("/engine-rest")
