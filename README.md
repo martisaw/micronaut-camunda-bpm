@@ -35,6 +35,7 @@ Micronaut + Camunda BPM = :heart:
 * The [process engine configuration](#custom-process-engine-configuration) and the [job executor configuration](#custom-jobexecutor-configuration) can be customized programmatically.
 * The process engine [integrates with Micronaut's transaction manager](#using-micronaut-data-jdbc-or-micronaut-data-jpa). Optionally, micronaut-data-jdbc or micronaut-data-jpa are supported.
 * Camunda BPM's telemetry feature is automatically deactivated during test execution 
+* Camunda REST API and Webapps (currently only for Jetty)
 
 # Getting Started
 
@@ -262,6 +263,14 @@ public class MyJobExecutorCustomizer implements JobExecutorCustomizer {
     }
 }
 ```
+### REST API and Webapps
+Currently, we support the REST API and Webapps only for **Jetty**. They are automatically included as soon as you 
+change the `micronaut.runtime` in `build.gradle` to `runtime('jetty')`.  
+The authorization for the REST API is not implemented.  
+
+To access the REST API use `/engine-rest/*`. To get e.g. the engine you can use `/engine-rest/engine`.
+
+To access the Webapps use `/camunda/`. You get redirected.
 
 ## Using micronaut-data-jdbc or micronaut-data-jpa
 
