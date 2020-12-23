@@ -158,6 +158,9 @@ public class JettyServerCustomizer implements BeanCreatedEventListener<Server> {
             registerFilter("CacheControlFilter", CacheControlFilter.class, "/api/*", "/app/*");
         }
 
+        @Override
+        public void contextDestroyed(ServletContextEvent sce) {}
+
         protected void registerFilter(String filterName, Class<? extends Filter> filterClass, String... urlPatterns) {
             FilterRegistration filterRegistration = servletContext.getFilterRegistration(filterName);
             if (filterRegistration == null) {
