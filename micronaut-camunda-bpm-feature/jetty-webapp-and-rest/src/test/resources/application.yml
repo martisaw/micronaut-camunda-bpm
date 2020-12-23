@@ -1,4 +1,18 @@
-datasources:
-  default:
-    schema-generate: CREATE_DROP
-    dialect: H2
+micronaut:
+  application:
+    name: jetty-webapp-and-rest
+camunda:
+  bpm:
+    telemetry.initializeTelemetry: true
+    admin-user:
+      id: admin
+      password: admin
+      firstname: Donald
+      lastname: Duck
+      email: donald@duck.com
+    webapps:
+      enabled: true
+      context-path: /camunda
+    rest:
+      enabled: true
+      context-path: /engine-rest

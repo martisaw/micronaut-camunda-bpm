@@ -25,7 +25,6 @@ class JettyRestTest {
         val request: HttpRequest<String> = HttpRequest.GET("/engine")
         val body = client.toBlocking().retrieve(request)
 
-        // CustomizedEngine because there is a Singleton replacing the DefaultEngine
         Assertions.assertEquals("""[{"name":"default"}]""", body)
     }
 }
