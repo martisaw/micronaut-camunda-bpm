@@ -68,8 +68,8 @@ public class JettyServerCustomizer implements BeanCreatedEventListener<Server> {
      will be thrown in {@link io.micronaut.transaction.jdbc.DataSourceUtils#doGetConnection(DataSource, boolean)} because
      "allowCreate" is false.
      */
-    public JettyServerCustomizer(SynchronousTransactionManager<Connection> transactionManager, Configuration configuration) {
-        log.trace("Transaction Manager has been initialized: {}", transactionManager);
+    public JettyServerCustomizer(/*SynchronousTransactionManager<Connection> transactionManager, */Configuration configuration) {
+        //log.trace("Transaction Manager has been initialized: {}", transactionManager);
         this.configuration = configuration;
 
         this.CONTEXT_PATH_WEBAPPS = configuration.getWebapps().getContextPath();
