@@ -47,13 +47,6 @@ import static javax.servlet.DispatcherType.REQUEST;
 //Implementation based on Spring-Boot-Starter: https://github.com/camunda/camunda-bpm-spring-boot-starter/tree/master/starter-webapp-core/src/main/java/org/camunda/bpm/spring/boot/starter/webapp
 public class JettyServerCustomizer implements BeanCreatedEventListener<Server> {
 
-    protected final String CONTEXT_PATH_REST;
-    protected final Boolean REST_ENABLED;
-
-    protected final String CONTEXT_PATH_WEBAPPS;
-    protected final Boolean WEBAPPS_ENABLED;
-
-
     private static final Logger log = LoggerFactory.getLogger(JettyServerCustomizer.class);
 
     protected final Configuration configuration;
@@ -71,12 +64,6 @@ public class JettyServerCustomizer implements BeanCreatedEventListener<Server> {
     public JettyServerCustomizer(/*SynchronousTransactionManager<Connection> transactionManager, */Configuration configuration) {
         //log.trace("Transaction Manager has been initialized: {}", transactionManager);
         this.configuration = configuration;
-
-        this.CONTEXT_PATH_WEBAPPS = configuration.getWebapps().getContextPath();
-        this.WEBAPPS_ENABLED = configuration.getWebapps().isEnabled();
-
-        this.CONTEXT_PATH_REST = configuration.getRest().getContextPath();
-        this.REST_ENABLED = configuration.getRest().isEnabled();
     }
 
     @Override
@@ -84,29 +71,26 @@ public class JettyServerCustomizer implements BeanCreatedEventListener<Server> {
 
         Server jettyServer = event.getBean();
 
-        ServletContextHandler contextHandler = (ServletContextHandler) jettyServer.getHandler();
         ContextHandlerCollection contextHandlerCollection = new ContextHandlerCollection();
-        contextHandlerCollection.addHandler(contextHandler);
+        contextHandlerCollection.addHandler(jettyServer.getHandler());
 
-        // REST-API
-        if (REST_ENABLED) {
+        if (configuration.getRest().isEnabled()) {
             ServletContextHandler restServletContextHandler = new ServletContextHandler();
-            restServletContextHandler.setContextPath(CONTEXT_PATH_REST);
+            restServletContextHandler.setContextPath(configuration.getRest().getContextPath());
             ServletHolder servletHolder = new ServletHolder(new ServletContainer(new RestApp()));
             restServletContextHandler.addServlet(servletHolder, "/*");
 
             contextHandlerCollection.addHandler(restServletContextHandler);
 
-            log.info("REST API initialized on {}/*", CONTEXT_PATH_REST);
+            log.info("REST API initialized on {}/*", configuration.getRest().getContextPath());
         }
 
-        // WEBAPPS
-        if (WEBAPPS_ENABLED) {
+        if (configuration.getWebapps().isEnabled()) {
             ServletContextHandler webappsContextHandler = new ServletContextHandler();
             Servlet defaultServlet = new DefaultServlet();
             ServletHolder webappsHolder = new ServletHolder("webapps", defaultServlet);
             webappsContextHandler.addServlet(webappsHolder, "/*");
-            webappsContextHandler.setContextPath(CONTEXT_PATH_WEBAPPS);
+            webappsContextHandler.setContextPath(configuration.getWebapps().getContextPath());
 
             Resource webappsResource = Resource.newClassPathResource("/META-INF/resources/webjars/camunda");
             Resource pluginsResource = Resource.newClassPathResource("/META-INF/resources");
@@ -124,7 +108,7 @@ public class JettyServerCustomizer implements BeanCreatedEventListener<Server> {
 
             contextHandlerCollection.addHandler(webappsContextHandler);
 
-            log.info("Webapps initialized on {}", CONTEXT_PATH_WEBAPPS);
+            log.info("Webapps initialized on {}", configuration.getWebapps().getContextPath());
         }
 
         jettyServer.setHandler(contextHandlerCollection);
