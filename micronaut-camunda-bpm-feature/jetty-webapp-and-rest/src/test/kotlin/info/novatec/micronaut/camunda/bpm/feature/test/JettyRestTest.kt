@@ -1,9 +1,11 @@
 package info.novatec.micronaut.camunda.bpm.feature.test
 
+import io.micronaut.context.annotation.Requires
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.client.RxHttpClient
 import io.micronaut.http.client.annotation.Client
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest
+import org.eclipse.jetty.server.Server
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import javax.inject.Inject
@@ -14,6 +16,7 @@ import javax.inject.Inject
  * @author Martin Sawilla
  */
 @MicronautTest
+@Requires(beans = [Server::class])
 class JettyRestTest {
 
     @Inject
