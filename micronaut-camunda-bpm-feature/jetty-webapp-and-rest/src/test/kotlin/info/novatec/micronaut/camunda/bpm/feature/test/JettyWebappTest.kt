@@ -16,6 +16,7 @@ import javax.inject.Inject
  */
 @MicronautTest
 class JettyWebappTest {
+
     @Inject
     @field:Client("/camunda")
     lateinit var client: RxHttpClient
