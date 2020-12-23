@@ -89,5 +89,5 @@ public interface Configuration {
         @Bindable(defaultValue = "/engine-rest")
         String getContextPath();
     }
-    //interface + getter -> Default false
+
 }
