@@ -2,10 +2,10 @@ package info.novatec.micronaut.camunda.bpm.feature;
 
 import info.novatec.micronaut.camunda.bpm.feature.rest.RestApp;
 import info.novatec.micronaut.camunda.bpm.feature.webapp.*;
-import io.micronaut.context.annotation.Requires;
 import io.micronaut.context.event.BeanCreatedEvent;
 import io.micronaut.context.event.BeanCreatedEventListener;
 import io.micronaut.transaction.SynchronousTransactionManager;
+import org.apache.ibatis.transaction.jdbc.JdbcTransaction;
 import org.camunda.bpm.admin.impl.web.bootstrap.AdminContainerBootstrap;
 import org.camunda.bpm.cockpit.impl.web.bootstrap.CockpitContainerBootstrap;
 import org.camunda.bpm.engine.rest.filter.CacheControlFilter;
@@ -30,6 +30,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Singleton;
 import javax.servlet.*;
+import javax.sql.DataSource;
 import java.sql.Connection;
 import java.util.EnumSet;
 
@@ -53,6 +54,16 @@ public class JettyServerCustomizer implements BeanCreatedEventListener<Server> {
 
     protected final Configuration configuration;
 
+    /**
+     Injecting the {@link SynchronousTransactionManager} here makes sure that the following scenario works:
+     Cockpit - Process Definitions - Any Definition, e.g. HelloWorld
+     Set a breakpoint in {@link JdbcTransaction#openConnection()} to see which data source is being used:
+     Works: {@link io.micronaut.configuration.jdbc.hikari.HikariUrlDataSource}
+     Doesn't work: {@link io.micronaut.transaction.jdbc.TransactionAwareDataSource}.
+     In case of TransactionAwareDataSource a {@link io.micronaut.transaction.jdbc.exceptions.CannotGetJdbcConnectionException}
+     will be thrown in {@link io.micronaut.transaction.jdbc.DataSourceUtils#doGetConnection(DataSource, boolean)} because
+     "allowCreate" is false.
+     */
     public JettyServerCustomizer(SynchronousTransactionManager<Connection> transactionManager, Configuration configuration) {
         log.trace("Transaction Manager has been initialized: {}", transactionManager);
         this.configuration = configuration;
