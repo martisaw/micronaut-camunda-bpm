@@ -11,8 +11,8 @@ camunda:
       lastname: Duck
       email: donald@duck.com
     webapps:
-      enabled: true
+      enabled: false
       context-path: /camunda
     rest:
       enabled: true
-      context-path: /camunda
+      context-path: /engine-rest
