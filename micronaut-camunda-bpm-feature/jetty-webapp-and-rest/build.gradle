@@ -29,9 +29,6 @@ dependencies {
     testImplementation("org.eclipse.jetty:jetty-server:$jettyVersion")
     testImplementation("org.eclipse.jetty:jetty-servlet:$jettyVersion")
 
-    // Integration of Transaction Management
-    //testAnnotationProcessor("io.micronaut.data:micronaut-data-processor")
-    //testImplementation("io.micronaut.data:micronaut-data-jdbc")
 }
 
 application {
