@@ -48,8 +48,13 @@ import static javax.servlet.DispatcherType.REQUEST;
 //Implementation based on Spring-Boot-Starter: https://github.com/camunda/camunda-bpm-spring-boot-starter/tree/master/starter-webapp-core/src/main/java/org/camunda/bpm/spring/boot/starter/webapp
 public class JettyServerCustomizer implements BeanCreatedEventListener<Server> {
 
-    protected static final String CONTEXT_PATH_REST = "/engine-rest";
-    protected static final String CONTEXT_PATH_WEBAPPS = "/camunda";
+    protected final String CONTEXT_PATH_REST;
+    protected final Boolean REST_ENABLED;
+
+    protected final String CONTEXT_PATH_WEBAPPS;
+    protected final Boolean WEBAPPS_ENABLED;
+
+
     private static final Logger log = LoggerFactory.getLogger(JettyServerCustomizer.class);
 
     protected final Configuration configuration;
@@ -67,6 +72,12 @@ public class JettyServerCustomizer implements BeanCreatedEventListener<Server> {
     public JettyServerCustomizer(SynchronousTransactionManager<Connection> transactionManager, Configuration configuration) {
         log.trace("Transaction Manager has been initialized: {}", transactionManager);
         this.configuration = configuration;
+
+        this.CONTEXT_PATH_WEBAPPS = configuration.getWebapps().getContextPath();
+        this.WEBAPPS_ENABLED = configuration.getWebapps().isEnabled();
+
+        this.CONTEXT_PATH_REST = configuration.getRest().getContextPath();
+        this.REST_ENABLED = configuration.getRest().isEnabled();
     }
 
     @Override
@@ -75,39 +86,49 @@ public class JettyServerCustomizer implements BeanCreatedEventListener<Server> {
         Server jettyServer = event.getBean();
 
         ServletContextHandler contextHandler = (ServletContextHandler) jettyServer.getHandler();
+        ContextHandlerCollection contextHandlerCollection = new ContextHandlerCollection();
+        contextHandlerCollection.addHandler(contextHandler);
 
         // REST-API
-        ServletContextHandler restServletContextHandler = new ServletContextHandler();
-        restServletContextHandler.setContextPath(CONTEXT_PATH_REST);
-        ServletHolder servletHolder = new ServletHolder(new ServletContainer(new RestApp()));
-        restServletContextHandler.addServlet(servletHolder, "/*");
+        if (REST_ENABLED) {
+            ServletContextHandler restServletContextHandler = new ServletContextHandler();
+            restServletContextHandler.setContextPath(CONTEXT_PATH_REST);
+            ServletHolder servletHolder = new ServletHolder(new ServletContainer(new RestApp()));
+            restServletContextHandler.addServlet(servletHolder, "/*");
 
-        log.info("REST API initialized on {}/*", CONTEXT_PATH_REST);
+            contextHandlerCollection.addHandler(restServletContextHandler);
+
+            log.info("REST API initialized on {}/*", CONTEXT_PATH_REST);
+        }
 
         // WEBAPPS
-        ServletContextHandler webappsContextHandler = new ServletContextHandler();
-        Servlet defaultServlet = new DefaultServlet();
-        ServletHolder webappsHolder = new ServletHolder("webapps", defaultServlet);
-        webappsContextHandler.addServlet(webappsHolder, "/*");
-        webappsContextHandler.setContextPath(CONTEXT_PATH_WEBAPPS);
+        if (WEBAPPS_ENABLED) {
+            ServletContextHandler webappsContextHandler = new ServletContextHandler();
+            Servlet defaultServlet = new DefaultServlet();
+            ServletHolder webappsHolder = new ServletHolder("webapps", defaultServlet);
+            webappsContextHandler.addServlet(webappsHolder, "/*");
+            webappsContextHandler.setContextPath(CONTEXT_PATH_WEBAPPS);
 
-        Resource webappsResource = Resource.newClassPathResource("/META-INF/resources/webjars/camunda");
-        Resource pluginsResource = Resource.newClassPathResource("/META-INF/resources");
-        ResourceCollection resources = new ResourceCollection(webappsResource, pluginsResource);
-        webappsContextHandler.setBaseResource(resources);
+            Resource webappsResource = Resource.newClassPathResource("/META-INF/resources/webjars/camunda");
+            Resource pluginsResource = Resource.newClassPathResource("/META-INF/resources");
+            ResourceCollection resources = new ResourceCollection(webappsResource, pluginsResource);
+            webappsContextHandler.setBaseResource(resources);
 
-        webappsContextHandler.addEventListener(new CockpitContainerBootstrap());
-        webappsContextHandler.addEventListener(new AdminContainerBootstrap());
-        webappsContextHandler.addEventListener(new TasklistContainerBootstrap());
-        webappsContextHandler.addEventListener(new WelcomeContainerBootstrap());
-        webappsContextHandler.addEventListener(new HttpSessionMutexListener());
-        webappsContextHandler.addEventListener(new ServletContextInitializedListener());
+            webappsContextHandler.addEventListener(new CockpitContainerBootstrap());
+            webappsContextHandler.addEventListener(new AdminContainerBootstrap());
+            webappsContextHandler.addEventListener(new TasklistContainerBootstrap());
+            webappsContextHandler.addEventListener(new WelcomeContainerBootstrap());
+            webappsContextHandler.addEventListener(new HttpSessionMutexListener());
+            webappsContextHandler.addEventListener(new ServletContextInitializedListener());
 
-        log.info("Webapps initialized on {}", CONTEXT_PATH_WEBAPPS);
+            webappsContextHandler.setSessionHandler(new SessionHandler());
 
-        webappsContextHandler.setSessionHandler(new SessionHandler());
+            contextHandlerCollection.addHandler(webappsContextHandler);
 
-        jettyServer.setHandler(new ContextHandlerCollection(contextHandler, webappsContextHandler, restServletContextHandler));
+            log.info("Webapps initialized on {}", CONTEXT_PATH_WEBAPPS);
+        }
+
+        jettyServer.setHandler(contextHandlerCollection);
 
         return jettyServer;
     }

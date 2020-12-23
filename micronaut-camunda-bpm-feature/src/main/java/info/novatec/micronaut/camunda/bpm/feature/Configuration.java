@@ -27,6 +27,12 @@ public interface Configuration {
     @NotNull
     AdminUser getAdminUser();
 
+    @NotNull
+    Webapps getWebapps();
+
+    @NotNull
+    Rest getRest();
+
     @ConfigurationProperties("database")
     interface Database {
 
@@ -64,5 +70,24 @@ public interface Configuration {
         Optional<String> getEmail();
     }
 
+    @ConfigurationProperties("webapps")
+    interface Webapps {
+
+        @Bindable(defaultValue = "false")
+        boolean isEnabled();
+
+        @Bindable(defaultValue = "/camunda")
+        String getContextPath();
+    }
+
+    @ConfigurationProperties("rest")
+    interface Rest {
+
+        @Bindable(defaultValue = "false")
+        boolean isEnabled();
+
+        @Bindable(defaultValue = "/engine-rest")
+        String getContextPath();
+    }
     //interface + getter -> Default false
 }
