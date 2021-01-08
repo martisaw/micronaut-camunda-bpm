@@ -27,6 +27,14 @@ import javax.inject.Inject
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class JettyWebappCustomConfigurationTest : TestPropertyProvider {
 
+    override fun getProperties(): MutableMap<String, String> {
+        return mutableMapOf(
+            "camunda.bpm.webapps.context-path" to "/custom-webapp-path",
+            "camunda.bpm.webapps.index-redirect-enabled" to "false",
+            "camunda.bpm.rest.context-path" to "/custom-rest-path"
+        )
+    }
+
     @Inject
     lateinit var configuration: Configuration
 
@@ -68,14 +76,5 @@ class JettyWebappCustomConfigurationTest : TestPropertyProvider {
         val request: HttpRequest<String> = HttpRequest.GET(configuration.webapps.contextPath + "/app/tasklist/default")
         val res: HttpResponse<*> = client.toBlocking().exchange<String, Any>(request)
         assertEquals(200, res.status().code)
-    }
-
-    @Suppress("Unchecked_Cast")
-    override fun getProperties(): MutableMap<String, String> {
-        return CollectionUtils.mapOf(
-            "camunda.bpm.webapps.context-path", "/custom-webapp-path",
-            "camunda.bpm.webapps.index-redirect-enabled", "false",
-            "camunda.bpm.rest.context-path", "/custom-rest-path"
-        ) as MutableMap<String, String>
     }
 }

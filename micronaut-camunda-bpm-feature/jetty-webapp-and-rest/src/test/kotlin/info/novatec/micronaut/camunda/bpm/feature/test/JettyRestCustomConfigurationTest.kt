@@ -23,6 +23,12 @@ import javax.inject.Inject
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class JettyRestCustomConfigurationTest : TestPropertyProvider {
 
+    override fun getProperties(): MutableMap<String, String> {
+        return mutableMapOf(
+            "camunda.bpm.rest.context-path" to "/custom-rest-path"
+        )
+    }
+
     @Inject
     lateinit var configuration: Configuration
 
@@ -36,12 +42,5 @@ class JettyRestCustomConfigurationTest : TestPropertyProvider {
         val body = client.toBlocking().retrieve(request)
 
         Assertions.assertEquals("""[{"name":"default"}]""", body)
-    }
-
-    @Suppress("Unchecked_Cast")
-    override fun getProperties(): MutableMap<String, String> {
-        return CollectionUtils.mapOf(
-            "camunda.bpm.rest.context-path", "/custom-rest-path"
-        ) as MutableMap<String, String>
     }
 }
