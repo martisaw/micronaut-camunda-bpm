@@ -68,9 +68,6 @@ public interface Configuration {
 
         @Bindable(defaultValue = "/camunda")
         String getContextPath();
-
-        @Bindable(defaultValue = "true")
-        boolean isIndexRedirectEnabled();
     }
 
     @ConfigurationProperties("rest")
