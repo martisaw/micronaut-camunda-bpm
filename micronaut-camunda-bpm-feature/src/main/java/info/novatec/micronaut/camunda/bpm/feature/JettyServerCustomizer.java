@@ -121,9 +121,13 @@ public class JettyServerCustomizer implements BeanCreatedEventListener<Server> {
             servletContext.addServlet("WelcomeApp", new ServletContainer(new WelcomeApp())).addMapping("/api/welcome/*");
             registerFilter("ProcessEnginesFilter", ProcessEnginesFilter.class, "/api/*", "/app/*");
             registerFilter("AuthenticationFilter", AuthenticationFilter.class, "/api/*", "/app/*");
+            // TODO add Security Filter
+            // TODO add CsrfPreventionFilter
+            // TODO configure headerSecurityProperties
             registerFilter("HttpHeaderSecurityFilter", HttpHeaderSecurityFilter.class, "/api/*", "/app/*");
             registerFilter("EmptyBodyFilter", EmptyBodyFilter.class, "/api/*", "/app/*");
             registerFilter("CacheControlFilter", CacheControlFilter.class, "/api/*", "/app/*");
+
         }
 
         @Override
