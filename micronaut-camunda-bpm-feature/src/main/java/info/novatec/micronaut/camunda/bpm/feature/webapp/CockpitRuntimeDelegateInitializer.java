@@ -1,8 +1,11 @@
 package info.novatec.micronaut.camunda.bpm.feature.webapp;
 
+import info.novatec.micronaut.camunda.bpm.feature.JettyServerCustomizer;
 import info.novatec.micronaut.camunda.bpm.feature.MnProcessEngineConfiguration;
+import io.micronaut.context.annotation.Requires;
 import io.micronaut.context.event.ApplicationEventListener;
 import io.micronaut.runtime.server.event.ServerStartupEvent;
+import io.micronaut.servlet.jetty.JettyServer;
 import io.micronaut.transaction.SynchronousTransactionManager;
 import org.apache.ibatis.transaction.jdbc.JdbcTransaction;
 import org.camunda.bpm.cockpit.Cockpit;
@@ -31,6 +34,8 @@ import java.sql.Connection;
  * @author Tobias Schäfer
  */
 @Singleton
+// Only get initialized if Jetty is the Runtime
+@Requires(classes = JettyServer.class)
 public class CockpitRuntimeDelegateInitializer implements ApplicationEventListener<ServerStartupEvent> {
 
     private static final Logger log = LoggerFactory.getLogger(CockpitRuntimeDelegateInitializer.class);
