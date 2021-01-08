@@ -14,6 +14,5 @@ camunda:
         initialize-telemetry: true
     webapps:
       enabled: true
-      index-redirect-enabled: false
     rest:
       enabled: true

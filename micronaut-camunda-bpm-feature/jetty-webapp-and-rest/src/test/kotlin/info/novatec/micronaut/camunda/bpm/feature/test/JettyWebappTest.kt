@@ -1,5 +1,6 @@
 package info.novatec.micronaut.camunda.bpm.feature.test
 
+import info.novatec.micronaut.camunda.bpm.feature.Configuration
 import io.micronaut.context.annotation.Requires
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
@@ -21,8 +22,11 @@ import javax.inject.Inject
 class JettyWebappTest {
 
     @Inject
-    @field:Client("/camunda")
+    @field:Client("/")
     lateinit var client: RxHttpClient
+
+    @Inject
+    lateinit var configuration: Configuration
 
     @Test()
     fun redirect() {
@@ -34,31 +38,30 @@ class JettyWebappTest {
 
     @Test
     fun welcome() {
-        val request: HttpRequest<String> = HttpRequest.GET("/app/welcome/default")
+        val request: HttpRequest<String> = HttpRequest.GET(configuration.webapps.contextPath + "/app/welcome/default")
         val res: HttpResponse<*> = client.toBlocking().exchange<String, Any>(request)
         Assertions.assertEquals(200, res.status().code)
     }
 
     @Test
     fun admin() {
-        val request: HttpRequest<String> = HttpRequest.GET("/app/admin/default")
+        val request: HttpRequest<String> = HttpRequest.GET(configuration.webapps.contextPath + "/app/admin/default")
         val res: HttpResponse<*> = client.toBlocking().exchange<String, Any>(request)
         Assertions.assertEquals(200, res.status().code)
     }
 
     @Test
     fun cockpit() {
-        val request: HttpRequest<String> = HttpRequest.GET("/app/cockpit/default")
+        val request: HttpRequest<String> = HttpRequest.GET(configuration.webapps.contextPath + "/app/cockpit/default")
         val res: HttpResponse<*> = client.toBlocking().exchange<String, Any>(request)
         Assertions.assertEquals(200, res.status().code)
     }
 
     @Test
     fun tasklist() {
-        val request: HttpRequest<String> = HttpRequest.GET("/app/tasklist/default")
+        val request: HttpRequest<String> = HttpRequest.GET(configuration.webapps.contextPath + "/app/tasklist/default")
         val res: HttpResponse<*> = client.toBlocking().exchange<String, Any>(request)
         Assertions.assertEquals(200, res.status().code)
     }
-
-
 }
+
