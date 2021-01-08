@@ -18,7 +18,6 @@ import javax.inject.Inject
  * @author Martin Sawilla
  */
 @MicronautTest
-@Requires(beans = [Server::class])
 class JettyWebappTest {
 
     @Inject

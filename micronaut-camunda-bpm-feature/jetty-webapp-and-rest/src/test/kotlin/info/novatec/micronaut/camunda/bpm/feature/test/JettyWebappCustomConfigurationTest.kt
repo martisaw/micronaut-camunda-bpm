@@ -1,21 +1,31 @@
 package info.novatec.micronaut.camunda.bpm.feature.test
 
 import info.novatec.micronaut.camunda.bpm.feature.Configuration
+import io.micronaut.context.annotation.Property
 import io.micronaut.context.annotation.Requires
+import io.micronaut.core.util.CollectionUtils
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.client.RxHttpClient
 import io.micronaut.http.client.annotation.Client
 import io.micronaut.http.client.exceptions.HttpClientResponseException
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest
+import io.micronaut.test.support.TestPropertyProvider
 import org.eclipse.jetty.server.Server
-import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.TestInstance
+import javax.annotation.Nonnull
 import javax.inject.Inject
-
-@Requires(beans = [Server::class])
-@MicronautTest(propertySources = ["classpath:applicationCustomConfiguration.yml"])
-class JettyWebappCustomConfigurationTest {
+/**
+ * Simple Test to check if the Webapps run with a custom configuration.
+ *
+ * @author Martin Sawilla
+ */
+@MicronautTest
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+class JettyWebappCustomConfigurationTest : TestPropertyProvider {
 
     @Inject
     lateinit var configuration: Configuration
@@ -24,47 +34,48 @@ class JettyWebappCustomConfigurationTest {
     @field:Client("/")
     lateinit var client: RxHttpClient
 
-    @Test
-    fun testConfiguration() {
-        Assertions.assertEquals(false, configuration.webapps.isIndexRedirectEnabled)
-        Assertions.assertEquals("/custom-path-webapps", configuration.webapps.contextPath)
-        Assertions.assertEquals("/custom-path-engine", configuration.rest.contextPath)
-    }
-
     @Test()
-    fun redirectFail() {
+    fun `redirect is disabled by application configuration`() {
         val request: HttpRequest<String> = HttpRequest.GET("/")
-
-        Assertions.assertThrows(HttpClientResponseException::class.java) {
+        assertThrows(HttpClientResponseException::class.java) {
             client.toBlocking().exchange<String, Any>(request)
         }
     }
 
     @Test
-    fun welcome() {
+    fun `welcome app is available` () {
         val request: HttpRequest<String> = HttpRequest.GET(configuration.webapps.contextPath + "/app/welcome/default")
         val res: HttpResponse<*> = client.toBlocking().exchange<String, Any>(request)
-        Assertions.assertEquals(200, res.status().code)
+        assertEquals(200, res.status().code)
     }
 
     @Test
-    fun admin() {
+    fun `admin app is available` () {
         val request: HttpRequest<String> = HttpRequest.GET(configuration.webapps.contextPath + "/app/admin/default")
         val res: HttpResponse<*> = client.toBlocking().exchange<String, Any>(request)
-        Assertions.assertEquals(200, res.status().code)
+        assertEquals(200, res.status().code)
     }
 
     @Test
-    fun cockpit() {
+    fun `cockpit app is available` () {
         val request: HttpRequest<String> = HttpRequest.GET(configuration.webapps.contextPath + "/app/cockpit/default")
         val res: HttpResponse<*> = client.toBlocking().exchange<String, Any>(request)
-        Assertions.assertEquals(200, res.status().code)
+        assertEquals(200, res.status().code)
     }
 
     @Test
-    fun tasklist() {
+    fun `tasklist app is available` () {
         val request: HttpRequest<String> = HttpRequest.GET(configuration.webapps.contextPath + "/app/tasklist/default")
         val res: HttpResponse<*> = client.toBlocking().exchange<String, Any>(request)
-        Assertions.assertEquals(200, res.status().code)
+        assertEquals(200, res.status().code)
+    }
+
+    @Suppress("Unchecked_Cast")
+    override fun getProperties(): MutableMap<String, String> {
+        return CollectionUtils.mapOf(
+            "camunda.bpm.webapps.context-path", "/custom-webapp-path",
+            "camunda.bpm.webapps.index-redirect-enabled", "false",
+            "camunda.bpm.rest.context-path", "/custom-rest-path"
+        ) as MutableMap<String, String>
     }
 }

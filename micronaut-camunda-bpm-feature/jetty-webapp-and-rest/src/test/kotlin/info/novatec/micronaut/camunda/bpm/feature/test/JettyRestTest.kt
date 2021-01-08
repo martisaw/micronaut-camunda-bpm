@@ -1,5 +1,6 @@
 package info.novatec.micronaut.camunda.bpm.feature.test
 
+import info.novatec.micronaut.camunda.bpm.feature.Configuration
 import io.micronaut.context.annotation.Requires
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.client.RxHttpClient
@@ -16,16 +17,19 @@ import javax.inject.Inject
  * @author Martin Sawilla
  */
 @MicronautTest
-@Requires(beans = [Server::class])
 class JettyRestTest {
 
     @Inject
-    @field:Client("/engine-rest")
+    lateinit var configuration: Configuration
+
+    @Inject
+    @field:Client("/")
     lateinit var client: RxHttpClient
+
 
     @Test
     fun engine() {
-        val request: HttpRequest<String> = HttpRequest.GET("/engine")
+        val request: HttpRequest<String> = HttpRequest.GET(configuration.rest.contextPath + "/engine")
         val body = client.toBlocking().retrieve(request)
 
         Assertions.assertEquals("""[{"name":"default"}]""", body)
