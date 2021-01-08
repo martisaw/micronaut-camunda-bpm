@@ -24,6 +24,7 @@ import javax.inject.Inject
  * @author Martin Sawilla
  */
 @MicronautTest
+@Requires(beans = [Server::class])
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class JettyWebappCustomConfigurationTest : TestPropertyProvider {
 
