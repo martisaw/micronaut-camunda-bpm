@@ -6,6 +6,8 @@ import org.glassfish.jersey.server.ResourceConfig;
 /**
  * Register CamundaRestResources.
  *
+ * See also https://docs.camunda.org/manual/latest/reference/rest/overview/embeddability/
+ *
  * @author Martin Sawilla
  */
 
