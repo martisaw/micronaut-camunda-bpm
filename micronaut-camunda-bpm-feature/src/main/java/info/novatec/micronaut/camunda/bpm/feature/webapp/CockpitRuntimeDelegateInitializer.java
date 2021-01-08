@@ -34,8 +34,7 @@ import java.sql.Connection;
  * @author Tobias Schäfer
  */
 @Singleton
-// Only get initialized if Jetty is the Runtime
-@Requires(classes = JettyServer.class)
+@Requires(property = "camunda.bpm.webapps.enabled", value="true")
 public class CockpitRuntimeDelegateInitializer implements ApplicationEventListener<ServerStartupEvent> {
 
     private static final Logger log = LoggerFactory.getLogger(CockpitRuntimeDelegateInitializer.class);
@@ -46,6 +45,7 @@ public class CockpitRuntimeDelegateInitializer implements ApplicationEventListen
     public CockpitRuntimeDelegateInitializer(MnProcessEngineConfiguration processEngineConfiguration, SynchronousTransactionManager<Connection> transactionManager) {
         this.processEngineConfiguration = processEngineConfiguration;
         this.transactionManager = transactionManager;
+        log.info("HELLO FROM DELEGATE INITIALIZER");
     }
 
     @Override
