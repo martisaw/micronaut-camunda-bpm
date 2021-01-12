@@ -219,8 +219,9 @@ camunda:
 
 Further Information:
 * The Webapps are by default available at `/camunda`. By default, `/` will redirect you there.
-* The REST API is by default available at `/engine-rest/engine`, e.g. to get the engine name use `GET /engine-rest/engine`.
+* The REST API is by default available at `/engine-rest`, e.g. to get the engine name use `GET /engine-rest/engine`.
 * See [Configuration Properties](#properties) on how to enable basic authentication for REST, create a default user, or disable the redirect.
+* The enabling of the REST API or the Webapps impacts the startup time. Depending on your hardware it increases by around 400-1000 milliseconds.
 
 ## Configuration
 

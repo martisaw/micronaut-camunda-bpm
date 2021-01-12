@@ -69,7 +69,7 @@ public class JettyServerCustomizer implements BeanCreatedEventListener<Server> {
             if (configuration.getRest().isBasicAuthEnabled()) {
                 FilterHolder filterHolder = new FilterHolder(ProcessEngineAuthenticationFilter.class);
                 filterHolder.setInitParameter("authentication-provider", "org.camunda.bpm.engine.rest.security.auth.impl.HttpBasicAuthenticationProvider");
-                restServletContextHandler.addFilter(filterHolder, "/*", EnumSet.of(REQUEST, INCLUDE, FORWARD, ERROR));
+                restServletContextHandler.addFilter(filterHolder, "/*", EnumSet.of(REQUEST));
                 log.debug("REST API - Basic authentication enabled");
             }
 
@@ -111,13 +111,14 @@ public class JettyServerCustomizer implements BeanCreatedEventListener<Server> {
 
     /**
       The configuration of the Camunda Webapps is called with a ServletContextListener because in
-      JettyServerCustomizer#onCreated the call to Cockpit.getRuntimeDelegate() would return null.
+      JettyServerCustomizer#onCreated some underlying methods (e.g. Cockpit.getRuntimeDelegate()) would result into
+      a NullPointerExceptions.
      */
     //TODO Martin is Cockpit.getRuntimeDelegate() ever called at all?
     static class ServletContextInitializedListener implements ServletContextListener {
         private static final Logger log = LoggerFactory.getLogger(ServletContextInitializedListener.class);
 
-        protected static EnumSet<DispatcherType> DISPATCHER_TYPES = EnumSet.of(REQUEST, INCLUDE, FORWARD, ERROR);
+        protected static EnumSet<DispatcherType> DISPATCHER_TYPES = EnumSet.of(REQUEST);
 
         protected static ServletContext servletContext;
 
