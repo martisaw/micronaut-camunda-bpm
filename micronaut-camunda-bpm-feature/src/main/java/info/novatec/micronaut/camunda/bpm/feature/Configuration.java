@@ -5,6 +5,7 @@ import io.micronaut.core.bind.annotation.Bindable;
 import io.micronaut.core.convert.format.MapFormat;
 import io.micronaut.core.naming.conventions.StringConvention;
 
+import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
 import java.util.HashMap;
 import java.util.Map;
@@ -15,6 +16,10 @@ import java.util.Optional;
  */
 @ConfigurationProperties("camunda.bpm")
 public interface Configuration {
+
+    @Nullable
+    @Bindable
+    String getFilter();
 
     @NotNull
     Webapps getWebapps();
