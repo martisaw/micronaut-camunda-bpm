@@ -308,6 +308,7 @@ You may use the following properties (typically in application.yml) to configure
 | camunda.bpm.webapps   | .enabled         | false                                        | Enable the webapps (Cockpit, Task list, Admin) |
 | camunda.bpm.webapps   | .context-path    | /camunda                                     | Context-path for the Webapps |
 | camunda.bpm.webapps   | .index-redirect-enabled| true                                   | Registers a redirect from / to the Webapps. |
+| camunda.bpm.filter    | .create          |                                              | Name of a "show all" filter for the task list. |
 
 ## Generic Properties
 
