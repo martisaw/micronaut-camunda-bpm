@@ -44,14 +44,14 @@ dependencies {
 
     // REST API + Webapps
     implementation("com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider")
-    api("org.camunda.bpm:camunda-engine-rest:$camundaVersion@pom")
+    implementation("org.camunda.bpm:camunda-engine-rest:$camundaVersion:classes")
+
     implementation("org.camunda.bpm.webapp:camunda-webapp-webjar:$camundaVersion")
     implementation("org.glassfish.jersey.inject:jersey-hk2:$jerseyVersion")
     implementation("org.glassfish.jersey.containers:jersey-container-servlet-core:$jerseyVersion")
     implementation("org.glassfish.jersey.containers:jersey-container-servlet:$jerseyVersion")
 
     // Dependencies for Jetty
-    compileOnly("io.micronaut.servlet:micronaut-http-server-jetty")
     implementation("org.eclipse.jetty:jetty-server:$jettyVersion")
     implementation("org.eclipse.jetty:jetty-servlet:$jettyVersion")
 
