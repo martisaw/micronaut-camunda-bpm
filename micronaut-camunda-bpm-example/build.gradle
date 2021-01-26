@@ -15,7 +15,8 @@ micronaut {
 }
 
 dependencies {
-    implementation(project(":micronaut-camunda-bpm-feature"))
+    //implementation(project(":micronaut-camunda-bpm-feature"))
+    compile 'info.novatec:micronaut-camunda-bpm-feature:0.0.1-SNAPSHOT' // OUR PROJECT FROM LOCAL REPO
     runtimeOnly("com.h2database:h2")
     runtimeOnly("ch.qos.logback:logback-classic")
 
@@ -26,6 +27,12 @@ dependencies {
     // Note: Newer versions of camunda-bpm-assert are not available on Maven Central
     testImplementation("org.camunda.bpm.assert:camunda-bpm-assert:8.0.0")
     testImplementation("org.assertj:assertj-core:3.19.0")
+}
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+    jcenter()
 }
 
 application {
