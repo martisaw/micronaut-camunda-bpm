@@ -30,6 +30,7 @@ Micronaut + Camunda = :heart:
   * [Camunda REST API and Webapps](#camunda-rest-api-and-webapps)
   * [Custom Process Engine Configuration](#custom-process-engine-configuration)
   * [Custom JobExecutor Configuration](#custom-jobexecutor-configuration)
+  * [Add Process Engine Plugins](#add-process-engine-plugins)  
   * [Transaction Management](#transaction-management)
   * [Process Tests](#process-tests)
   * [Pitfalls](#pitfalls)
@@ -47,6 +48,7 @@ Micronaut + Camunda = :heart:
 * The process engine can be configured with [generic properties](#generic-properties).
 * The [Camunda REST API and the Webapps](#camunda-rest-api-and-webapps) are supported (currently only for Jetty).
 * The [process engine configuration](#custom-process-engine-configuration) and the [job executor configuration](#custom-jobexecutor-configuration) can be customized programmatically.
+* [Process Engine Plugins](#add-process-engine-plugins) are automatically loaded on start.
 * A Camunda admin user is created if configured by [properties](#properties) and not present yet (including admin group and authorizations).
 * Camunda's telemetry feature is automatically deactivated during test execution.
 
@@ -323,6 +325,24 @@ public class MyJobExecutorCustomizer implements JobExecutorCustomizer {
     public void customize(MnJobExecutor jobExecutor) {
         jobExecutor.setWaitTimeInMillis(300);
     }
+}
+```
+
+## Add Process Engine Plugins
+Every class that implements `ProcessEnginePlugin` gets automatically added to the engine on start. 
+To add your plugin you just need to annotate it with `@Singleton`. Here is an example for a `DoNothingPlugin`.
+
+```java
+@Singleton
+public class DoNothingPlugin implements ProcessEnginePlugin {
+  @Override
+  public void preInit(ProcessEngineConfigurationImpl processEngineConfiguration) {}
+
+  @Override
+  public void postInit(ProcessEngineConfigurationImpl processEngineConfiguration) {}
+
+  @Override
+  public void postProcessEngineBuild(ProcessEngine processEngine) {}
 }
 ```
 

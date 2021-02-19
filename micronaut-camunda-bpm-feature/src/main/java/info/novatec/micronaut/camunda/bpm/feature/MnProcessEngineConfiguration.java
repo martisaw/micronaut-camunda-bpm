@@ -27,6 +27,7 @@ import io.micronaut.transaction.SynchronousTransactionManager;
 import org.camunda.bpm.engine.ProcessEngine;
 import org.camunda.bpm.engine.ProcessEngineConfiguration;
 import org.camunda.bpm.engine.impl.cfg.ProcessEngineConfigurationImpl;
+import org.camunda.bpm.engine.impl.cfg.ProcessEnginePlugin;
 import org.camunda.bpm.engine.impl.interceptor.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -73,6 +74,8 @@ public class MnProcessEngineConfiguration extends ProcessEngineConfigurationImpl
 
     protected final BasicJdbcConfiguration basicJdbcConfiguration;
 
+    protected final List<ProcessEnginePlugin> plugins;
+
     public MnProcessEngineConfiguration(SynchronousTransactionManager<Connection> transactionManager,
                                         MnJobExecutor jobExecutor,
                                         Configuration configuration,
@@ -84,7 +87,8 @@ public class MnProcessEngineConfiguration extends ProcessEngineConfigurationImpl
                                         DataSource dataSource,
                                         MnArtifactFactory artifactFactory,
                                         MnBeansResolverFactory beansResolverFactory,
-                                        ProcessEngineConfigurationCustomizer processEngineConfigurationCustomizer) {
+                                        ProcessEngineConfigurationCustomizer processEngineConfigurationCustomizer,
+                                        List<ProcessEnginePlugin> plugins) {
         this.transactionManager = transactionManager;
         this.jobExecutor = jobExecutor;
         this.telemetryRegistry = telemetryRegistry;
@@ -93,6 +97,8 @@ public class MnProcessEngineConfiguration extends ProcessEngineConfigurationImpl
         this.camundaVersion = camundaVersion;
         this.basicJdbcConfiguration = basicJdbcConfiguration;
         checkForDeprecatedConfiguration();
+        this.plugins = plugins;
+
         setDataSource(dataSource);
         setTransactionsExternallyManaged(true);
         setExpressionManager(new MnExpressionManager(new ApplicationContextElResolver(applicationContext)));
@@ -103,6 +109,8 @@ public class MnProcessEngineConfiguration extends ProcessEngineConfigurationImpl
         applyGenericProperties(configuration);
 
         configureTelemetry();
+
+        registerProcessEnginePlugins();
 
         processEngineConfigurationCustomizer.customize(this);
     }
@@ -224,4 +232,11 @@ public class MnProcessEngineConfiguration extends ProcessEngineConfigurationImpl
         // Otherwise applyGenericProperties cannot set the property.
         return super.setInitializeTelemetry(telemetryInitialized);
     }
+
+    protected void registerProcessEnginePlugins() {
+        if (!this.plugins.isEmpty()) {
+            this.setProcessEnginePlugins(this.plugins);
+        }
+    }
+
 }
