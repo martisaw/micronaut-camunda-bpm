@@ -2,9 +2,9 @@ micronaut:
   application:
     name: micronaut-camunda-example
 camunda:
-  admin-user:
-    id: admin
-    password: admin
+  #admin-user:
+  #  id: admin
+  #  password: admin
   generic-properties:
     properties:
       initialize-telemetry: true
