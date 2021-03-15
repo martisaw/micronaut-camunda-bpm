@@ -25,9 +25,9 @@ import javax.inject.Singleton;
 import java.util.HashMap;
 import java.util.Map;
 
-@Singleton
-public class ExternalTaskWorker {
-    private static final Logger log = LoggerFactory.getLogger(ExternalTaskWorker.class);
+//@Singleton
+public class ExternalTaskWorkerOld {
+    private static final Logger log = LoggerFactory.getLogger(ExternalTaskWorkerOld.class);
 
     private static final String BASE_URL = "http://localhost:8080/engine-rest";
 

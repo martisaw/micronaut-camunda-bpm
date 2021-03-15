@@ -22,6 +22,4 @@ public class ExternalTaskWorkerApplication {
     public static void main(String[] args) {
         Micronaut.run(ExternalTaskWorkerApplication.class, args);
     }
-
-
 }

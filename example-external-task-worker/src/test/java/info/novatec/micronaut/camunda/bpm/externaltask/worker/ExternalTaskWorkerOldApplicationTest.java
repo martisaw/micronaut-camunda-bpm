@@ -24,7 +24,7 @@ import javax.inject.Inject;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @MicronautTest
-class ExternalTaskWorkerApplicationTest {
+class ExternalTaskWorkerOldApplicationTest {
 
     @Inject
     EmbeddedApplication<?> application;
