@@ -1,4 +1,4 @@
-package info.novatec.micronaut.camunda.externaltask.worker;
+package info.novatec.external.task.worker.feature;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -14,5 +14,6 @@ public @interface ExternalTaskSubscription {
 
     String topic();
 
-    String lockDuration() default "";
+    // > 0
+    long lockDuration() default 20000;
 }

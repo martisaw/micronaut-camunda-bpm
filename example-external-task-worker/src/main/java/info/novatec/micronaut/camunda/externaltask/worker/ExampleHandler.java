@@ -1,5 +1,6 @@
 package info.novatec.micronaut.camunda.externaltask.worker;
 
+import info.novatec.external.task.worker.feature.ExternalTaskSubscription;
 import org.camunda.bpm.client.task.ExternalTask;
 import org.camunda.bpm.client.task.ExternalTaskHandler;
 import org.camunda.bpm.client.task.ExternalTaskService;

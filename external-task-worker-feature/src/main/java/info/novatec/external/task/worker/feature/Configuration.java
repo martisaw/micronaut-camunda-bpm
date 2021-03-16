@@ -1,4 +1,4 @@
-package info.novatec.micronaut.camunda.externaltask.worker;
+package info.novatec.external.task.worker.feature;
 
 import io.micronaut.context.annotation.ConfigurationProperties;
 
