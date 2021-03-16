@@ -10,7 +10,15 @@ import javax.inject.Singleton;
 import java.util.HashMap;
 import java.util.Map;
 
-@Singleton // FIXME Declaring the @Singleton on the @ExternalTaskSubscription Annotation Interface does not work
+/**
+ * FIXME Declaring the @Singleton on the @ExternalTaskSubscription Annotation Interface does not work
+ * Error: Caused by: io.micronaut.context.exceptions.NoSuchBeanException: No bean of type
+ * [org.camunda.bpm.client.task.ExternalTaskHandler] exists. Make sure the bean is not disabled by bean
+ * requirements (enable trace logging for 'io.micronaut.context.condition' to check) and if the bean is
+ * enabled then ensure the class is declared a bean and annotation processing is enabled (for Java and
+ * Kotlin the 'micronaut-inject-java' dependency should be configured as an annotation processor).
+ */
+@Singleton
 @ExternalTaskSubscription(topic = "my-topic")
 public class ExampleHandler implements ExternalTaskHandler {
 
