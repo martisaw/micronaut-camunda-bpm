@@ -41,7 +41,7 @@ public class ExampleHandler implements ExternalTaskHandler {
 
         // Complete the task
         externalTaskService.complete(externalTask, variables);
-        log.info("Finished item " + item + " with Value " + value);
+        log.info("Finished item {} with Value {}", item, value);
     }
 }
 

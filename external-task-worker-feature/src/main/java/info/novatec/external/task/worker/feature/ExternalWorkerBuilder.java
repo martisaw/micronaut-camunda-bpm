@@ -15,9 +15,9 @@ public class ExternalWorkerBuilder implements ApplicationEventListener<ServerSta
 
     protected static final Logger log = LoggerFactory.getLogger(ExternalWorkerBuilder.class);
 
-    protected ExternalTaskHandler externalTaskHandler;
-    protected ExternalTaskSubscription externalTaskSubscription;
-    protected Configuration configuration;
+    protected final ExternalTaskHandler externalTaskHandler;
+    protected final ExternalTaskSubscription externalTaskSubscription;
+    protected final Configuration configuration;
 
     // TODO Support multiple Subscriptions -> At the moment I only inject one Handler
     public ExternalWorkerBuilder(ExternalTaskHandler externalTaskHandler, Configuration configuration) {
@@ -28,16 +28,48 @@ public class ExternalWorkerBuilder implements ApplicationEventListener<ServerSta
 
     @Override
     public void onApplicationEvent(ServerStartupEvent event) {
-        ExternalTaskClientBuilder clientBuilder = ExternalTaskClient.create();
-
-        clientBuilder.baseUrl(configuration.getBaseUrl());
-        clientBuilder.asyncResponseTimeout(1000);
-
-        ExternalTaskClient client = clientBuilder.build();
+        ExternalTaskClient client = buildClient();
 
         client.subscribe(externalTaskSubscription.topic())
                 .handler(this.externalTaskHandler)
                 .open();
         // I can also do a factory and return multiple TopicSubscriptions (Prototype)
+    }
+
+    protected ExternalTaskClient buildClient() {
+        ExternalTaskClientBuilder clientBuilder = ExternalTaskClient.create();
+
+        clientBuilder.baseUrl(configuration.getBaseUrl());
+
+        if (configuration.getWorkerId().isPresent()) {
+            clientBuilder.workerId(configuration.getWorkerId().get());
+        }
+        if (configuration.getMaxTasks().isPresent()) {
+            clientBuilder.maxTasks(configuration.getMaxTasks().get());
+        }
+        if (configuration.getUsePriority().isPresent()) {
+            clientBuilder.usePriority(configuration.getUsePriority().get());
+        }
+        if (configuration.getDefaultSerializationFormat().isPresent()) {
+            clientBuilder.defaultSerializationFormat(configuration.getDefaultSerializationFormat().get());
+        }
+        if (configuration.getDateFormat().isPresent()) {
+            clientBuilder.dateFormat(configuration.getDateFormat().get());
+        }
+        if (configuration.getAsyncResponseTimeout().isPresent()) {
+            clientBuilder.asyncResponseTimeout(configuration.getAsyncResponseTimeout().get());
+        }
+        if (configuration.getLockDuration().isPresent()) {
+            clientBuilder.lockDuration(configuration.getLockDuration().get());
+        }
+        if (configuration.getDisableAutoFetching().isPresent() && configuration.getDisableAutoFetching().get()) {
+            // TODO Is this really useful? Does the user even has the possibility to manually start this? I don't think so.
+            clientBuilder.disableAutoFetching();
+        }
+        if (configuration.getDisableBackoffStragey().isPresent() && configuration.getDisableBackoffStragey().get()) {
+            clientBuilder.disableBackoffStrategy();
+        }
+
+        return clientBuilder.build();
     }
 }

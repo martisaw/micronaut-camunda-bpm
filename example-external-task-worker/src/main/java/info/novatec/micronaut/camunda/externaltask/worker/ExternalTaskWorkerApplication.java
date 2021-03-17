@@ -17,6 +17,7 @@ package info.novatec.micronaut.camunda.externaltask.worker;
 
 import io.micronaut.runtime.Micronaut;
 
+// TODO Spring Boot Starter also allows the configuration of the baseUrl etc. here
 public class ExternalTaskWorkerApplication {
 
     public static void main(String[] args) {
