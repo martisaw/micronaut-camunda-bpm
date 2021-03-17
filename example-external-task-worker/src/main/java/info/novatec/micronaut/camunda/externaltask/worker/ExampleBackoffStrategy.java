@@ -13,25 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package info.novatec.external.task.worker.feature;
+package info.novatec.micronaut.camunda.externaltask.worker;
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.Target;
+import org.camunda.bpm.client.backoff.BackoffStrategy;
+import org.camunda.bpm.client.task.ExternalTask;
 
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
+import javax.inject.Singleton;
+import java.util.List;
 
-/**
- * @author Martin Sawilla
- */
-@Target(ElementType.TYPE)
-@Retention(RUNTIME)
-@Documented
-public @interface ExternalTaskSubscription {
+@Singleton
+public class ExampleBackoffStrategy implements BackoffStrategy {
+    @Override
+    public void reconfigure(List<ExternalTask> externalTasks) {
+        // TODO implement
+    }
 
-    String topic();
-
-    // > 0
-    long lockDuration() default 20000;
+    @Override
+    public long calculateBackoffTime() {
+        return 0;
+    }
 }

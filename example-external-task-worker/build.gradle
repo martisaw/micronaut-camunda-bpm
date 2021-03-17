@@ -28,11 +28,6 @@ dependencies {
     implementation("io.micronaut:micronaut-http-client")
     runtimeOnly("ch.qos.logback:logback-classic")
 
-    // TODO Switch to MN Commandline App?
-    // https://micronaut-projects.github.io/micronaut-picocli/latest/guide/
-    // https://docs.micronaut.io/latest/guide/index.html#commandLineApps
-
-
 }
 
 application {

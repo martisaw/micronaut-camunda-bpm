@@ -15,7 +15,7 @@
  */
 package info.novatec.micronaut.camunda.externaltask.worker;
 
-import io.micronaut.runtime.event.annotation.EventListener;
+import io.micronaut.context.event.ApplicationEventListener;
 import io.micronaut.runtime.server.event.ServerStartupEvent;
 import org.camunda.bpm.client.ExternalTaskClient;
 import org.slf4j.Logger;
@@ -25,14 +25,19 @@ import javax.inject.Singleton;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * @author Martin Sawilla
+ *
+ * This is the old way of building a client. Just uncomment @Singleton and you are good to go.
+ */
 //@Singleton
-public class ExternalTaskWorkerOld {
+public class ExternalTaskWorkerOld implements ApplicationEventListener<ServerStartupEvent> {
     private static final Logger log = LoggerFactory.getLogger(ExternalTaskWorkerOld.class);
 
     private static final String BASE_URL = "http://localhost:8080/engine-rest";
 
-    @EventListener
-    void onStartup(ServerStartupEvent event) {
+    @Override
+    public void onApplicationEvent(ServerStartupEvent event) {
         log.info("Starting ExternalTaskClient connected to {}", BASE_URL);
 
         ExternalTaskClient client = ExternalTaskClient.create()
