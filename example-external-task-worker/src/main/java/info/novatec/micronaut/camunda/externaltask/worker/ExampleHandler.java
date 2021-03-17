@@ -37,7 +37,7 @@ import java.util.Map;
  * Kotlin the 'micronaut-inject-java' dependency should be configured as an annotation processor).
  */
 @Singleton
-@ExternalTaskSubscription(topic = "my-topic")
+@ExternalTaskSubscription(topicName = "my-topic" /*, variables = {"a", "b"}*/)
 public class ExampleHandler implements ExternalTaskHandler {
 
     private static final Logger log = LoggerFactory.getLogger(ExampleHandler.class);

@@ -12,4 +12,6 @@ class ExternalWorkerBuilderTest {
     }
 
     // TODO implement tests that check the configuration possibilities
+    // Well I probably need a Camunda BPM Platform Server the client can connect to?
+    // What exactly do I want to check?
 }

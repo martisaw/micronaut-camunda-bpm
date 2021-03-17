@@ -22,6 +22,7 @@ import org.camunda.bpm.client.ExternalTaskClientBuilder;
 import org.camunda.bpm.client.backoff.BackoffStrategy;
 import org.camunda.bpm.client.interceptor.ClientRequestInterceptor;
 import org.camunda.bpm.client.task.ExternalTaskHandler;
+import org.camunda.bpm.client.topic.TopicSubscriptionBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -57,9 +58,8 @@ public class ExternalWorkerBuilder implements ApplicationEventListener<ServerSta
     public void onApplicationEvent(ServerStartupEvent event) {
         ExternalTaskClient client = buildClient();
 
-        client.subscribe(externalTaskSubscription.topic())
-                .handler(this.externalTaskHandler)
-                .open();
+        buildTopicSubscription(client);
+
         // Idea for multiple Subscriptions: I can also do a factory and return multiple TopicSubscriptions (Prototype)
         // Potential problem: When do they get initialized?
     }
@@ -106,5 +106,55 @@ public class ExternalWorkerBuilder implements ApplicationEventListener<ServerSta
         });
 
         return clientBuilder.build();
+    }
+
+    protected void buildTopicSubscription(ExternalTaskClient client) {
+        TopicSubscriptionBuilder topicSubscriptionBuilder = client.subscribe(externalTaskSubscription.topicName());
+
+        topicSubscriptionBuilder.handler(externalTaskHandler);
+
+        topicSubscriptionBuilder.lockDuration(externalTaskSubscription.lockDuration());
+
+        if(!externalTaskSubscription.variables()[0].equals("")) {
+            topicSubscriptionBuilder.variables(externalTaskSubscription.variables());
+        }
+
+        topicSubscriptionBuilder.localVariables(externalTaskSubscription.localVariables());
+
+        if(!externalTaskSubscription.businessKey().equals("")) {
+            topicSubscriptionBuilder.businessKey(externalTaskSubscription.businessKey());
+        }
+
+        if(!externalTaskSubscription.processDefinitionId().equals("")) {
+            topicSubscriptionBuilder.processDefinitionId(externalTaskSubscription.processDefinitionId());
+        }
+
+        if(!externalTaskSubscription.processDefinitionIdIn()[0].equals("")) {
+            topicSubscriptionBuilder.processDefinitionIdIn(externalTaskSubscription.processDefinitionIdIn());
+        }
+
+        if(!externalTaskSubscription.processDefinitionKey().equals("")) {
+            topicSubscriptionBuilder.processDefinitionKey(externalTaskSubscription.processDefinitionKey());
+        }
+
+        if(!externalTaskSubscription.processDefinitionKeyIn()[0].equals("")) {
+            topicSubscriptionBuilder.processDefinitionKeyIn(externalTaskSubscription.processDefinitionKeyIn());
+        }
+
+        if(!externalTaskSubscription.processDefinitionVersionTag().equals("")) {
+            topicSubscriptionBuilder.processDefinitionVersionTag(externalTaskSubscription.processDefinitionVersionTag());
+        }
+
+        if(externalTaskSubscription.withoutTenantId()) {
+            topicSubscriptionBuilder.withoutTenantId();
+        }
+
+        if(!externalTaskSubscription.tenantIdIn()[0].equals("")) {
+            topicSubscriptionBuilder.tenantIdIn(externalTaskSubscription.tenantIdIn());
+        }
+
+        topicSubscriptionBuilder.includeExtensionProperties(externalTaskSubscription.includeExtensionProperties());
+
+        topicSubscriptionBuilder.open();
     }
 }

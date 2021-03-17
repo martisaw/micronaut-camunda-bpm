@@ -9,6 +9,24 @@ maybe disable auto fetching?
 ## Get Started
 TODO
 
+## TopicSubscription
+| Property                    | Default | Description                                                                  |
+|-----------------------------|---------|------------------------------------------------------------------------------|
+| topicName                   |         | Mandatory, The topic name the client subscribes to.                          |
+| lockDuration                | 20000   | Lock duration in milliseconds to lock external tasks. Must be greater than zero. |
+| variables                   |         | The name of the variables that are supposed to be retrieved.                 |
+| localVariables              | false   | Whether or not variables from greater scope than the external task should be fetched. false means all variables visible in the scope of the external task will be fetched, true means only local variables (to the scope of the external task) will be fetched. |
+| businessKey                 |         | A business key to filter for external tasks that are supposed to be fetched and locked. |
+| processDefinitionId         |         | A process definition id to filter for external tasks that are supposed to be fetched and locked. |
+| processDefinitionIdIn       |         | Process definition ids to filter for external tasks that are supposed to be fetched and locked. |
+| processDefinitionKey        |         | A process definition key to filter for external tasks that are supposed to be fetched and locked. |
+| processDefinitionKeyIn      |         | Process definition keys to filter for external tasks that are supposed to be fetched and locked. |
+| processDefinitionVersionTag |         |                                                                              |
+| withoutTenantId             | false   | Filter for external tasks without tenant.                                    |
+| tenantIdIn                  |         | Tenant ids to filter for external tasks that are supposed to be fetched and locked. |
+| includeExtensionProperties  | false   | Whether or not to include custom extension properties for fetched external tasks. true means all extensionProperties defined in the external task activity will be provided. false means custom extension properties are not available within the external-task-client |
+
+
 ## Custom Backoff Strategies
 TODO
 

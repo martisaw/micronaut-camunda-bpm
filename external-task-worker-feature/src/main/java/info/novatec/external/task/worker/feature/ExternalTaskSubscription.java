@@ -19,6 +19,9 @@ import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.List;
 
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
@@ -30,8 +33,30 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Documented
 public @interface ExternalTaskSubscription {
 
-    String topic();
+    String topicName();
 
-    // > 0
     long lockDuration() default 20000;
+
+    String[] variables() default "";
+
+    boolean  localVariables() default false;
+
+    String businessKey() default "";
+
+    String processDefinitionId() default "";
+
+    String[] processDefinitionIdIn() default "";
+
+    String processDefinitionKey() default "";
+
+    String[] processDefinitionKeyIn() default "";
+
+    String processDefinitionVersionTag() default "";
+
+    boolean withoutTenantId() default false;
+
+    String[] tenantIdIn() default "";
+
+    boolean includeExtensionProperties() default false;
+
 }
