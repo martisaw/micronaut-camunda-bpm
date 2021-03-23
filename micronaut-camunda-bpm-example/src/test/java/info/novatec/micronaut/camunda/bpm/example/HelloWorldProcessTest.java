@@ -19,6 +19,8 @@ import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 import org.camunda.bpm.engine.RuntimeService;
 import org.camunda.bpm.engine.runtime.ProcessInstance;
 import org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import javax.inject.Inject;
@@ -30,6 +32,11 @@ class HelloWorldProcessTest {
 
     @Inject
     RuntimeService runtimeService;
+
+    @BeforeAll
+    static void resetBpmAwareContext() {
+        BpmnAwareTests.reset();
+    }
 
     @Test
     void happyPath() {
