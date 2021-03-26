@@ -1,10 +1,12 @@
 micronaut:
   application:
     name: micronaut-camunda-example
+  server:
+    port: 8888
 camunda:
-  admin-user:
-    id: admin
-    password: admin
+#  admin-user:
+#    id: admin
+#    password: admin
   generic-properties:
     properties:
       initialize-telemetry: true
@@ -12,5 +14,13 @@ camunda:
     enabled: true
   rest:
     enabled: true
+    basic-auth-enabled: true
   filter:
     create: "All tasks"
+plugin.identity.keycloak:
+  keycloakIssuerUrl: http://localhost:8080/auth/realms/master
+  keycloakAdminUrl: http://localhost:8080/auth/admin/realms/master
+  clientId: camunda-identity-service
+  clientSecret: b625f59e-d812-461f-b3a2-f6d93acc0133
+  useEmailAsCamundaUserId: true
+  administratorGroupName: camunda-admin
