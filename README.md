@@ -835,7 +835,64 @@ Other combinations might also work but have not been tested.
 
 | Release |Micronaut | Camunda |
 |--------|-------|--------|
-| 0.24.0 | 2.5.1 | 7.15.0 |
+| 0.24.0 | 2.5.1 | 7.15.0<br>7.14.0 * |
+
+<details>
+<summary>* Click to show the necessary configuration to use Camunda 7.14.0</summary>
+
+You have to exclude all Camunda 7.15.0 dependencies and replace them with Camunda 7.14.0.
+
+If you use gradle you can do the following:
+```groovy
+implementation("info.novatec:micronaut-camunda-bpm-feature:0.X.0") {
+    exclude group: 'org.camunda.bpm.webapp', module: 'camunda-webapp-webjar'
+    exclude group: 'org.camunda.bpm', module: 'camunda-engine'
+    exclude group: 'org.camunda.bpm', module: 'camunda-engine-rest'
+}
+implementation("org.camunda.bpm:camunda-engine-rest:7.14.0:classes")
+implementation("org.camunda.bpm.webapp:camunda-webapp-webjar:7.14.0")
+implementation("org.camunda.bpm:camunda-engine:7.14.0")
+```
+
+If you use maven you can do the following:
+```xml
+<dependency>
+  <groupId>info.novatec</groupId>
+  <artifactId>micronaut-camunda-bpm-feature</artifactId>
+  <version>0.X.0</version>
+  <exclusions>
+    <exclusion>
+      <groupId>org.camunda.bpm.webapp</groupId>
+      <artifactId>camunda-webapp-webjar</artifactId>
+    </exclusion>
+    <exclusion>
+      <groupId>org.camunda.bpm</groupId>
+      <artifactId>camunda-engine</artifactId>
+    </exclusion>
+    <exclusion>
+      <groupId>org.camunda.bpm</groupId>
+      <artifactId>camunda-engine-rest</artifactId>
+    </exclusion>
+  </exclusions>
+</dependency>
+<dependency>
+  <groupId>org.camunda.bpm.webapp</groupId>
+  <artifactId>camunda-webapp-webjar-ee</artifactId>
+  <version>7.14.0</version>
+</dependency>
+<dependency>
+  <groupId>org.camunda.bpm</groupId>
+  <artifactId>camunda-engine</artifactId>
+  <version>7.14.0</version>
+</dependency>
+<dependency>
+  <groupId>org.camunda.bpm</groupId>
+  <artifactId>camunda-engine-rest</artifactId>
+  <version>7.14.0</version>
+</dependency>
+```
+
+</details>
 
 <details>
 <summary>Click to see older releases</summary>
