@@ -1,12 +1,11 @@
 plugins {
-    id("com.github.johnrengelman.shadow")
     id("io.micronaut.application")
 }
 
 group = "info.novatec"
 
 micronaut {
-    runtime("netty")
+    runtime("jetty")
     testRuntime("junit5")
     processing {
         incremental(true)
@@ -21,6 +20,9 @@ dependencies {
 
     // Test
     testImplementation("io.micronaut:micronaut-http-client")
+
+    testImplementation("org.camunda.bpm.assert:camunda-bpm-assert:$camundaPlatformAssert")
+    testImplementation("org.assertj:assertj-core")
 }
 
 application {
@@ -32,7 +34,6 @@ java {
     targetCompatibility = JavaVersion.toVersion("1.8")
 }
 
-tasks {
-
+dockerfile {
+    args.set(['-Dmicronaut.server.host=0.0.0.0']) // Jetty must listen on all interfaces, not only on "localhost"
 }
-

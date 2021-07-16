@@ -1,39 +1,6 @@
-# Developer Guide
-## Get the code
+# Getting Started
 
-Create a local Git clone:
-
-`git clone https://github.com/NovatecConsulting/micronaut-camunda-bpm.git`
-
-## Open and run in IntelliJ IDEA
-
-To import the project into IntelliJ IDEA simply open the build.gradle file and follow the instructions to import the project.
-
-For IntelliJ IDEA if you plan to use the IntelliJ compiler then you should enable annotation processing under the "Build, Execution, Deployment → Compiler → Annotation Processors" by ticking the "Enable annotation processing" checkbox.
-
-Once you have enabled annotation processing in IntelliJ you can run the application and tests directly within the IDE without the need of an external build tool such as Gradle.
-
-## Build integration project and run the example application
-
-To build the integration project (subfolder [`micronaut-camunda-bpm-feature`](/micronaut-camunda-bpm-feature)) and start the
-example application (subfolder [`micronaut-camunda-bpm-example`](/micronaut-camunda-bpm-example)) simply execute:
-
-Unix:
-```
-./gradlew clean run -p micronaut-camunda-bpm-example
-```
-
-Windows:
-
-```
-gradlew.bat clean run -p micronaut-camunda-bpm-example
-```
-
-## Call the example app
-
-Open in your browser:
-* http://localhost:8080/camunda/name will return "default" as the name of the default process engine.
-* http://localhost:8080/camunda/definitions will return "HelloWorld" as the currently deployed process model.
+To get started see our example application at [/micronaut-camunda-bpm-example](/micronaut-camunda-bpm-example).
 
 # Contribution Guidelines
 
@@ -70,6 +37,29 @@ Most importantly, please format your commit messages in the following way:
 * Prefix Git commit messages with the ticket number, e.g. "Close #42: xyz"
 * Describe WHY you are making the change, e.g. "Close #42: Added logback to suppress the debug messages during maven build" (not only "changed logging").
 
+### Copyright Header
+
+Every class must contain a copyright header. You can configure IntelliJ IDEA to add it for new classes:
+
+1. Add a profile with scope "Project files": `Editor → Copyright`
+2. Add the following text to the profile:
+```text
+Copyright $today.year original authors
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+https://www.apache.org/licenses/LICENSE-2.0
+ 
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+```
+3. Set "Regex to detect copyright in comments" to "Copyright"
+
 ### Clean up commit history
 
 Use `git rebase --interactive` to "squash" multiple commits sensibly into atomic changes. In addition to the man pages for git, there are many resources online to help you understand how these tools work.
@@ -88,6 +78,6 @@ Note that you can always force push (`git push -f`) reworked / rebased commits a
 
 ### Now looking for work?
 
-Have a look at the open issues at https://github.com/NovatecConsulting/micronaut-camunda-bpm/issues, especially those tagged with `good first issue`.
+Have a look at the open issues at https://github.com/camunda-community-hub/micronaut-camunda-bpm/issues, especially those tagged with `good first issue`.
 
 We're looking forward to your contribution :-)

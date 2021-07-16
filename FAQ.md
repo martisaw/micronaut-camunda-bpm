@@ -10,14 +10,14 @@ We're not depending on the Lombok to simplify the setup of the development envir
 ### How do I create and publish a new release?
 
 1. Trigger the release
-   1. Open https://github.com/NovatecConsulting/micronaut-camunda-bpm/releases
+   1. Open https://github.com/camunda-community-hub/micronaut-camunda-bpm/releases
    2. Click "Draft a new release"
    3. Enter a tag version of the master branch, e.g. v0.1.0 considering the last tag and https://semver.org/
    4. Click on "Publish release"
 2. Verify that release is built and uploaded to OSSRH successfully
-   1. Open https://github.com/NovatecConsulting/micronaut-camunda-bpm/actions?query=workflow%3A%22Publish+to+OSSRH+when+released%22
+   1. Open https://github.com/camunda-community-hub/micronaut-camunda-bpm/actions?query=workflow%3A%22Publish+to+OSSRH+when+released%22
    2. Wait for build to succeed  
-   The build sporadically fails due to timeouts during the upload of artifacts. In this case delete the release via the GitHub UI, delete the tag with `git push origin :<tag>` and then retry.
+   The build sporadically fails due to timeouts during the upload of artifacts. In this case go to the failing workflow and then re-run the job.
 3. Publish to Maven Central (see also [Detailed instructions](https://central.sonatype.org/pages/releasing-the-deployment.html))
    1. Open https://oss.sonatype.org/#stagingRepositories
    2. Start verification by selecting the repository and clicking on "Close"
@@ -29,3 +29,10 @@ We're not depending on the Lombok to simplify the setup of the development envir
       1. Dependencies for Gradle and Maven
       2. Compatibility Matrix
    3. That's all :-) There is no need to update the version in the project. It will stay at 0.0.1-SNAPSHOT.
+5. Update Example Applications
+   1. https://github.com/tobiasschaefer/micronaut-camunda-example-onboarding
+   2. https://github.com/tobiasschaefer/micronaut-camunda-example-java-maven
+   3. https://github.com/tobiasschaefer/micronaut-camunda-example-kotlin-gradle
+6. Update Micronaut Launch in [starter-core project](https://github.com/micronaut-projects/micronaut-starter/blob/2.4.x/starter-core/src/main/resources/pom.xml) (check branch!)
+   1. Update version number of micronaut-camunda-bpm-feature
+   2. Update version number of camunda-bpm-assert (if changed)

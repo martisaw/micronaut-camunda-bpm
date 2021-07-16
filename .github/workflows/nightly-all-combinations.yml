@@ -1,0 +1,39 @@
+# This workflow will build a Java project with Gradle
+# For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-gradle
+
+name: Nightly All Combinations
+
+on:
+  schedule:
+    - cron:  '0 2 * * *'
+
+jobs:
+  build:
+    if: github.repository_owner == 'camunda-community-hub' # Don't trigger nightly builds on forks
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        java: ['11', '16'] #Support LTS releases 8 and 11 and the latest release supported by Micronaut. Note: JDK 8 is not covered here because it would require org.gradle.jvmargs not to be set making the configuration more complex - however JDK 8 is already fully covered in the continuous-integration.yml
+        runtime: ['netty', 'jetty', 'tomcat', 'undertow']
+        include:
+          - java: '15' #include this combination because tomcat/java16 is currently failing, see https://github.com/camunda-community-hub/micronaut-camunda-bpm/issues/296
+            runtime: 'tomcat'
+
+    steps:
+      - name: Git Checkout
+        uses: actions/checkout@v2
+      - name: Set up JDKs with Matrix Build
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'zulu'
+          java-version: ${{ matrix.java }}
+      - name: Cache Dependencies #see https://github.com/actions/cache/blob/master/examples.md#java---gradle
+        uses: actions/cache@v2
+        with:
+          path: ~/.gradle/caches
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+      - name: Build with Gradle Wrapper
+        run: ./gradlew build --warning-mode=fail -Pmicronaut.runtime=${{ matrix.runtime }} -Dorg.gradle.jvmargs=--illegal-access=permit

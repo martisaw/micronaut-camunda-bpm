@@ -1,3 +1,18 @@
+/*
+ * Copyright 2020-2021 original authors
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package info.novatec.micronaut.camunda.bpm.feature.test
 
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest
@@ -6,11 +21,9 @@ import org.camunda.bpm.engine.RuntimeService
 import org.camunda.bpm.engine.delegate.DelegateExecution
 import org.camunda.bpm.engine.delegate.JavaDelegate
 import org.camunda.bpm.model.bpmn.Bpmn
-import org.camunda.bpm.model.bpmn.builder.EndEventBuilder
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers
-import org.mockito.Mockito
 import org.mockito.Mockito.*
 import javax.inject.Inject
 import javax.inject.Named
@@ -33,10 +46,9 @@ class BeanInvocationTest {
     }
 
     @Test
-    @Throws(Exception::class)
     fun `service task with expression delegate`() {
         val processId = "processWithExpressionDelegate"
-        deploy(Bpmn.createProcess(processId)
+        ProcessUtil.deploy(repositoryService, Bpmn.createProcess(processId)
                 .executable()
                 .startEvent()
                 .serviceTask().camundaDelegateExpression("\${myDelegate}")
@@ -46,10 +58,9 @@ class BeanInvocationTest {
     }
 
     @Test
-    @Throws(Exception::class)
     fun `service task with Java class name`() {
         val processId = "processWithJavaClassName"
-        deploy(Bpmn.createProcess(processId)
+        ProcessUtil.deploy(repositoryService, Bpmn.createProcess(processId)
                 .executable()
                 .startEvent()
                 .serviceTask().camundaClass(JavaDelegate::class.java.name)
@@ -61,19 +72,12 @@ class BeanInvocationTest {
     @Test
     fun `service task with unmanaged Java delegate`() {
         val processId = "unmanagedJavaDelegate"
-        deploy(Bpmn.createProcess(processId)
+        ProcessUtil.deploy(repositoryService, Bpmn.createProcess(processId)
                 .executable()
                 .startEvent()
                 .serviceTask().camundaClass(UnmanagedJavaDelegate::class.java.name)
                 .endEvent())
         runtimeService.startProcessInstanceByKey(processId)
-    }
-
-    private fun deploy(endEventBuilder: EndEventBuilder) {
-        val xml = Bpmn.convertToString(endEventBuilder.done())
-        repositoryService.createDeployment()
-                .addString("model.bpmn", xml)
-                .deploy()
     }
 
     class UnmanagedJavaDelegate : JavaDelegate {
